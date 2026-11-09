@@ -9,8 +9,8 @@ SceneGame::SceneGame()
 	,m_pGoal(nullptr)
 {
 	m_pGround = new Ground;
-	m_pGround->SetPos(0.0f, 0.0f, 0.0f);
-	m_pGround->SetScale(3.0f, 0.4f, 3.0f);
+	m_pGround->SetPos(0.0f, -0.25f, 0.0f);
+	m_pGround->SetScale(20.0f, 0.5f, 3.0f);
 
 	m_pGoal = new Goal;
 	m_pGoal->SetPos(0.0f, 1.0f, 0.0f);
@@ -18,11 +18,15 @@ SceneGame::SceneGame()
 	m_pCamera = new CameraDebug(); //継承されたDebugのクラスを入れる
 
 	m_pModel = new Model();
+
+
+	m_pLeftPlater = new CLeftPlayer();
+	m_pLeftPlater->SetPos(-1.0f, 0.5f, 0.0f);
+
+	m_pRightPlater = new CRightPlayer();
+	m_pRightPlater->SetPos(1.0f, 0.5f, 0.0f);
+
 	
-	if (!m_pModel->Load("Assets/Model/apple.obj",0.5f))
-	{
-		MessageBox(NULL, "モデル読み込み失敗aaaaaaa", "Load Error", MB_OK);
-	}
 
 	
 
@@ -52,6 +56,17 @@ SceneGame::~SceneGame()
 		delete m_pModel;
 		m_pModel = nullptr;
 	}
+	if (m_pLeftPlater)
+	{
+		delete m_pLeftPlater;
+		m_pLeftPlater = nullptr;
+	}
+	if (m_pRightPlater)
+	{
+		delete m_pRightPlater;
+		m_pRightPlater = nullptr;
+	}
+
 
 }
 
@@ -60,6 +75,8 @@ void SceneGame::Update()
 	m_pGround->Update();
 	m_pGoal->Update();
 	m_pCamera->Update();
+	m_pLeftPlater->Update();
+	m_pRightPlater->Update();
 }
 
 void SceneGame::Draw()
@@ -70,19 +87,30 @@ void SceneGame::Draw()
 	//Geometory::DrawBox();
 	m_pGround->Draw();
 	//m_pGoal->Draw();
+	m_pLeftPlater->Draw();
+	m_pRightPlater->Draw();
 
-	if (m_pModel)
+	
+}
+
+
+
+
+
+void SceneGame::ModelDraw(Model* model,float posX,float posY,float posZ, float sizeX,float sizeY,float sizeZ)
+{
+	if (model)
 	{
 
 		//モデルを表示するためのワールド行列を変換
 		DirectX::XMFLOAT4X4 fWorld;
-		
-		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(0.0f, 1.0f, 0.0f);
-		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f);
+
+		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(posX, posY, posZ);
+		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(sizeX, sizeY, sizeZ);
 		DirectX::XMMATRIX world = S * T;
 
 		world = DirectX::XMMatrixTranspose(world);
-		DirectX::XMStoreFloat4x4(&fWorld,world);
+		DirectX::XMStoreFloat4x4(&fWorld, world);
 
 
 		//シェーダーに必要なデータを設定
@@ -91,26 +119,28 @@ void SceneGame::Draw()
 		ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
 
 		// モデルに使用する各種シェーダーを設定 
-		m_pModel->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
-		m_pModel->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
+		model->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
+		model->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
 
 		// メッシュ別にモデルを表示 
-		for (int i = 0; i < m_pModel->GetMeshNum(); ++i) {
+		for (int i = 0; i < model->GetMeshNum(); ++i) {
 
 			// モデルのメッシュを取得 
-			const Model::Mesh* mesh = m_pModel->GetMesh(i);
+			const Model::Mesh* mesh = model->GetMesh(i);
 
 			// メッシュに割り当てられているマテリアルを取得 
-			Model::Material material = *m_pModel->GetMaterial(mesh->materialID);
+			Model::Material material = *model->GetMaterial(mesh->materialID);
 
 
 			// シェーダーへマテリアルを設定 
 			ShaderList::SetMaterial(material);
 
 			// モデルの描画(内部的に一括で行っていた描画処理を、メッシュごとの描画処理に変更) 
-			m_pModel->Draw(i);
+			model->Draw(i);
 		}
-
 	}
-	
+	else
+	{
+		return;
+	}
 }

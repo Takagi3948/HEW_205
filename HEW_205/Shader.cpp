@@ -23,7 +23,7 @@ HRESULT Shader::Load(const char* pFileName)
 {
 	HRESULT hr = E_FAIL;
 
-	// ファイルを読み込む
+	// ファイルを読み込むよ
 	FILE* fp;
 	fopen_s(&fp, pFileName, "rb");
 	if (!fp) { return hr; }
