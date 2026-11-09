@@ -6,8 +6,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Model.h"
-#include "LeftPlayer.h"
-#include "RightPlayer.h"
+#include "Player.h"
 
 
 class SceneGame : public Scene
@@ -25,9 +24,9 @@ private:
 	Goal* m_pGoal; //ゴールオブジェクト
 	Camera* m_pCamera; //継承元のカメラクラスのみ
 	Model* m_pModel;
+	CPlayer* m_pPlayer;
 
-	CLeftPlayer* m_pLeftPlater;
-	CRightPlayer* m_pRightPlater;
+	
 
 };
 

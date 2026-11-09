@@ -21,4 +21,6 @@ public:
 	//À•W‚Ìİ’è
 	void SetPos(float x, float y, float z);
 
+
+
 };

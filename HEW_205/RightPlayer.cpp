@@ -16,6 +16,8 @@ CRightPlayer::~CRightPlayer()
 void CRightPlayer::Update()
 {
 	//ˆÚ“®ˆ—
+	if (IsKeyPress(VK_LEFT)) { m_pos[0] -= 0.1f; }
+	if (IsKeyPress(VK_RIGHT)) { m_pos[0] += 0.1f; }
 
 }
 

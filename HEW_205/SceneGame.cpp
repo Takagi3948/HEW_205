@@ -19,16 +19,8 @@ SceneGame::SceneGame()
 
 	m_pModel = new Model();
 
+	m_pPlayer = new CPlayer();
 
-	m_pLeftPlater = new CLeftPlayer();
-	m_pLeftPlater->SetPos(-1.0f, 0.5f, 0.0f);
-
-	m_pRightPlater = new CRightPlayer();
-	m_pRightPlater->SetPos(1.0f, 0.5f, 0.0f);
-
-	
-
-	
 
 	//深度テストの有効化
 	SetDepthTest(DEPTH_ENABLE);
@@ -56,17 +48,11 @@ SceneGame::~SceneGame()
 		delete m_pModel;
 		m_pModel = nullptr;
 	}
-	if (m_pLeftPlater)
+	if (m_pPlayer)
 	{
-		delete m_pLeftPlater;
-		m_pLeftPlater = nullptr;
+		delete m_pPlayer;
+		m_pPlayer = nullptr;
 	}
-	if (m_pRightPlater)
-	{
-		delete m_pRightPlater;
-		m_pRightPlater = nullptr;
-	}
-
 
 }
 
@@ -75,8 +61,7 @@ void SceneGame::Update()
 	m_pGround->Update();
 	m_pGoal->Update();
 	m_pCamera->Update();
-	m_pLeftPlater->Update();
-	m_pRightPlater->Update();
+	m_pPlayer->Update();
 }
 
 void SceneGame::Draw()
@@ -87,10 +72,8 @@ void SceneGame::Draw()
 	//Geometory::DrawBox();
 	m_pGround->Draw();
 	//m_pGoal->Draw();
-	m_pLeftPlater->Draw();
-	m_pRightPlater->Draw();
+	m_pPlayer->Draw();
 
-	
 }
 
 
