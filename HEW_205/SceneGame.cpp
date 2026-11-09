@@ -21,7 +21,7 @@ SceneGame::SceneGame()
 	
 	if (!m_pModel->Load("Assets/Model/apple.obj",0.5f))
 	{
-		MessageBox(NULL, "ƒ‚ƒfƒ‹“Ç‚İ‚İ¸”s", "Load Error", MB_OK);
+		MessageBox(NULL, "ƒ‚ƒfƒ‹“Ç‚İ‚İ¸”saaaaaaaaaa", "Load Error", MB_OK);
 	}
 
 	
