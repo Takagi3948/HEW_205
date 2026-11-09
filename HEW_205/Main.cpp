@@ -8,7 +8,7 @@
 #include "Defines.h"
 #include "ShaderList.h"
 
-//--- グローバル変数
+//--- グローバル変数aa
 Scene* g_pScene;
 
 HRESULT Init(HWND hWnd, UINT width, UINT height)
