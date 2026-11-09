@@ -63,7 +63,7 @@ void Draw()
 			DirectX::XMFLOAT3(grid, 0.0f, size),
 			DirectX::XMFLOAT3(grid, 0.0f,-size),
 		};
-		Geometory::AddLine(pos[0], pos[1], lineColor);
+		Geometory::AddLine(pos[0], pos[1], lineColor);        
 		pos[0].x = pos[1].x = -grid;
 		Geometory::AddLine(pos[0], pos[1], lineColor);
 		pos[0].x = size;
