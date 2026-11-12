@@ -50,3 +50,8 @@ void CRightPlayer::SetPos(float x, float y, float z)
 	m_pos[2] = z;
 }
 
+DirectX::XMFLOAT2 CRightPlayer::GetPos()
+{
+	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
+	return Pos;
+}

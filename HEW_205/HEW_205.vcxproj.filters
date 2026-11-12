@@ -34,11 +34,14 @@
     <Filter Include="ソース ファイル\System\DirectX">
       <UniqueIdentifier>{36a071c1-5faa-4aab-876a-ec9bef09e703}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Player">
-      <UniqueIdentifier>{a442c01f-92a6-4df9-8a51-d02880af64cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Player">
       <UniqueIdentifier>{6972a149-7573-40b2-9628-85b4150e656a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game">
+      <UniqueIdentifier>{1ca4c73d-38dd-45b1-890c-405eeb373a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Player">
+      <UniqueIdentifier>{a442c01f-92a6-4df9-8a51-d02880af64cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +103,13 @@
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="RightPlayer.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Game\Player</Filter>
     </ClCompile>
     <ClCompile Include="LeftPlayer.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\Game\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +168,9 @@
       <Filter>ヘッダー ファイル\Player</Filter>
     </ClInclude>
     <ClInclude Include="LeftPlayer.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>

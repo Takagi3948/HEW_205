@@ -49,3 +49,9 @@ void CLeftPlayer::SetPos(float x, float y, float z)
 	m_pos[2] = z;
 }
 
+//À•W‚Ìæ“¾iFLOAT2j
+DirectX::XMFLOAT2 CLeftPlayer::GetPos()
+{
+	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
+	return Pos;
+}
