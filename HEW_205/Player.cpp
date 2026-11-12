@@ -80,14 +80,14 @@ void CPlayer::Update()
     }
 
     // 左プレイヤージャンプ
-    if (IsKeyTrigger(VK_SPACE) && !leftJump)
+    if (IsKeyTrigger('W') && !leftJump)
     {
         leftVelocityY = JUMP_POWER;
         leftJump = true;
     }
 
     // 右プレイヤージャンプ
-    if (IsKeyTrigger(VK_SPACE) && !rightJump)
+    if (IsKeyTrigger(VK_UP) && !rightJump)
     {
         rightVelocityY = JUMP_POWER;
         rightJump = true;
