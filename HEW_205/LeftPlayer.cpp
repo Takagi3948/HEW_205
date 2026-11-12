@@ -15,9 +15,7 @@ CLeftPlayer::~CLeftPlayer()
 
 void CLeftPlayer::Update()
 {
-	//ˆÚ“®ˆ—
-	if (IsKeyPress('A')) { m_pos[0] -= 0.1f; }
-	if (IsKeyPress('D')) { m_pos[0] += 0.1f; }
+	
 }
 
 void CLeftPlayer::Draw()
