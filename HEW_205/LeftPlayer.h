@@ -22,5 +22,4 @@ public:
 	void SetPos(float x, float y, float z);
 	DirectX::XMFLOAT2 GetPos();
 
-
 };

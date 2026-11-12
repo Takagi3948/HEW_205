@@ -15,7 +15,12 @@ CRightPlayer::~CRightPlayer()
 
 void CRightPlayer::Update()
 {
-	
+	//ƒWƒƒƒ“ƒv
+
+
+	//d—Íˆ—
+
+	//“–‚½‚è”»’è
 
 }
 
@@ -55,3 +60,4 @@ DirectX::XMFLOAT2 CRightPlayer::GetPos()
 	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
 	return Pos;
 }
+

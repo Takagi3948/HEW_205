@@ -9,6 +9,7 @@ class CPlayer {
 private:
 	CLeftPlayer* m_pLeftPlayer;
 	CRightPlayer* m_pRightPlayer;
+	DirectX::XMFLOAT4 Position;
 
 public:
 	CPlayer();
@@ -19,5 +20,7 @@ public:
 
 	//•`‰æˆ—
 	void Draw();
+
+	DirectX::XMFLOAT4 GetPos();
 
 };

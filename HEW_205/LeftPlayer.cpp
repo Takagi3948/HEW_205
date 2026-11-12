@@ -15,7 +15,13 @@ CLeftPlayer::~CLeftPlayer()
 
 void CLeftPlayer::Update()
 {
-	
+	//ジャンプ
+
+
+	//重力処理
+
+	//当たり判定
+
 }
 
 void CLeftPlayer::Draw()
@@ -49,7 +55,6 @@ void CLeftPlayer::SetPos(float x, float y, float z)
 	m_pos[2] = z;
 }
 
-//座標の取得（FLOAT2）
 DirectX::XMFLOAT2 CLeftPlayer::GetPos()
 {
 	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };

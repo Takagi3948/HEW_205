@@ -7,6 +7,10 @@
 SceneGame::SceneGame()
 	:m_pGround(nullptr)
 	,m_pGoal(nullptr)
+	,m_pCamera(nullptr)
+	,m_pModel(nullptr)
+	,m_pPlayer(nullptr)
+	,m_pStand(nullptr)
 {
 	m_pGround = new Ground;
 	m_pGround->SetPos(0.0f, -0.25f, 0.0f);
@@ -21,6 +25,7 @@ SceneGame::SceneGame()
 
 	m_pPlayer = new CPlayer();
 
+	m_pStand = new CStand();
 
 	//深度テストの有効化
 	SetDepthTest(DEPTH_ENABLE);
@@ -53,6 +58,11 @@ SceneGame::~SceneGame()
 		delete m_pPlayer;
 		m_pPlayer = nullptr;
 	}
+	if (m_pStand)
+	{
+		delete m_pStand;
+		m_pStand = nullptr;
+	}
 
 }
 
@@ -62,6 +72,9 @@ void SceneGame::Update()
 	m_pGoal->Update();
 	m_pCamera->Update();
 	m_pPlayer->Update();
+
+	m_pStand->SetPos(m_pPlayer->GetPos());
+	m_pStand->Update();
 }
 
 void SceneGame::Draw()
@@ -73,6 +86,7 @@ void SceneGame::Draw()
 	m_pGround->Draw();
 	//m_pGoal->Draw();
 	m_pPlayer->Draw();
+	m_pStand->Draw();
 
 }
 

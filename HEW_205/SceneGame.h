@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Player.h"
+#include "Stand.h"
 
 
 class SceneGame : public Scene
@@ -25,6 +26,7 @@ private:
 	Camera* m_pCamera; //Œp³Œ³‚ÌƒJƒƒ‰ƒNƒ‰ƒX‚Ì‚İ
 	Model* m_pModel;
 	CPlayer* m_pPlayer;
+	CStand* m_pStand;
 
 	
 
