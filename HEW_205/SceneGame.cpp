@@ -11,6 +11,7 @@ SceneGame::SceneGame()
 	,m_pModel(nullptr)
 	,m_pPlayer(nullptr)
 	,m_pStand(nullptr)
+	,m_pFruit(nullptr)
 {
 	m_pGround = new Ground;
 	m_pGround->SetPos(0.0f, -0.25f, 0.0f);
@@ -26,6 +27,8 @@ SceneGame::SceneGame()
 	m_pPlayer = new CPlayer();
 
 	m_pStand = new CStand();
+
+	m_pFruit = new CFruit();
 
 	//深度テストの有効化
 	SetDepthTest(DEPTH_ENABLE);
@@ -63,6 +66,11 @@ SceneGame::~SceneGame()
 		delete m_pStand;
 		m_pStand = nullptr;
 	}
+	if (m_pFruit)
+	{
+		delete m_pFruit;
+		m_pFruit = nullptr;
+	}
 
 }
 
@@ -75,6 +83,8 @@ void SceneGame::Update()
 
 	m_pStand->SetPos(m_pPlayer->GetPos());
 	m_pStand->Update();
+
+	m_pFruit->Update();
 }
 
 void SceneGame::Draw()
@@ -88,6 +98,7 @@ void SceneGame::Draw()
 	m_pPlayer->Draw();
 	m_pStand->Draw();
 
+	m_pFruit->Draw();
 }
 
 
