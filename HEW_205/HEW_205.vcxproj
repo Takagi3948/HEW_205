@@ -145,7 +145,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraDebug.cpp" />
-    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Geometory.cpp" />
@@ -172,7 +171,6 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraDebug.h" />
-    <ClInclude Include="Collision.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Fruit.h" />

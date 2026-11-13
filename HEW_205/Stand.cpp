@@ -1,4 +1,4 @@
-ï»¿#include "Stand.h"
+#include "Stand.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 #include"Defines.h"
@@ -34,7 +34,7 @@ void CStand::Update()
 
 void CStand::Draw()
 {
-	//å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
+	//•ÏŠ·s—ñ‚ÌŒvZ
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
 	DirectX::XMMATRIX Ry = DirectX::XMMatrixRotationY(0);
@@ -43,20 +43,20 @@ void CStand::Draw()
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(3.0f, 0.5f, 0.6f);
 	DirectX::XMMATRIX mat = S * R * T;
 
-	//å¤‰æ›è¡Œåˆ—ã‚’GPUã«æ¸¡ã™ãŸã‚ã®å‰å‡¦ç†
+	//•ÏŠ·s—ñ‚ğGPU‚É“n‚·‚½‚ß‚Ì‘Oˆ—
 	mat = DirectX::XMMatrixTranspose(mat);
 	DirectX::XMFLOAT4X4 fMat;
-	//matã‚’fMatã«æ ¼ç´
+	//mat‚ğfMat‚ÉŠi”[
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
 
-	//æç”»å‡¦ç†
+	//•`‰æˆ—
 	Geometory::SetWorld(fMat);
 	Geometory::DrawBox();
 
 }
 
-//äºŒäººã®å ´æ‰€ã‹ã‚‰å ´æ‰€ãƒ»è§’åº¦ã®è¨ˆç®—
+//“ñl‚ÌêŠ‚©‚çêŠEŠp“x‚ÌŒvZ
 void CStand::SetPos(DirectX::XMFLOAT4 Pos)
 {
 	float dx = Pos.z - Pos.x;
@@ -69,8 +69,3 @@ void CStand::SetPos(DirectX::XMFLOAT4 Pos)
 
 }
 
-//! Collisionãƒã‚§ãƒƒã‚¯ç”¨ã€‚ç¾åœ¨ã®ä½ç½®ã‚’å–å¾—
-DirectX::XMFLOAT3 CStand::GetPos()
-{
-	return m_pos;
-}

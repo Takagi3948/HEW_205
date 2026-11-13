@@ -1,4 +1,4 @@
-ï»¿#pragma once
+
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
@@ -6,7 +6,7 @@
 
 class CStand {
 private:
-	DirectX::XMFLOAT3 m_pos;		//åº§æ¨™
+	DirectX::XMFLOAT3 m_pos;		//À•W
 	float angle;
 	DirectX::XMFLOAT2 LeftPos;
 	DirectX::XMFLOAT2 RightPos;
@@ -16,14 +16,14 @@ public:
 	CStand();
 	~CStand();
 
-	//æ›´æ–°å‡¦ç†
+	//XVˆ—
 	void Update();
 
-	//æç”»å‡¦ç†
+	//•`‰æˆ—
 	void Draw();
 
 
-	//åº§æ¨™ã®è¨­å®š
+	//À•W‚Ìİ’è
 	void SetPos(DirectX::XMFLOAT4 Pos);
 
 	//Collision::Info GetCollision() {
@@ -31,6 +31,5 @@ public:
 	//}
 	//virtual void OnCollision(Collision::Result collision) {}
 
-	//! ã“ã“ã‹ã‚‰CollisionCheckç”¨ã§é–¢æ•°è¿½åŠ 
-	DirectX::XMFLOAT3 GetPos();
+
 };

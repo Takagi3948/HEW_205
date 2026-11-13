@@ -1,24 +1,21 @@
-ï»¿#include "Fruit.h"
+#include "Fruit.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 #include"Defines.h"
 
-#include "Collision.h"//åˆ¤å®šç”¨è¿½åŠ 
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
 	, radius(0.5f)
 	, m_pModel(nullptr)
 	, m_pCamera(nullptr)
-	, m_pStand(nullptr)
 {
 	m_pModel = new Model();
 	m_pCamera = new CameraDebug();
-	m_pStand = new CStand();
 
 	if (!m_pModel->Load("Assets/Model/apple/apple.obj", 0.2f))
 	{
-		MessageBox(NULL, "ãƒ¢ãƒ‡ãƒ«èª­ã¿è¾¼ã¿å¤±æ•—", "Load Error", MB_OK);
+		MessageBox(NULL, "ƒ‚ƒfƒ‹“Ç‚İ‚İ¸”s", "Load Error", MB_OK);
 	}
 
 }
@@ -30,31 +27,20 @@ CFruit::~CFruit()
 		delete m_pModel;
 		m_pModel = nullptr;
 	}
-
-	if (m_pStand)
-	{
-		delete m_pStand;
-		m_pStand = nullptr;
-	}
 }
 
 void CFruit::Update()
 {
-	//é‡åŠ›
+	//d—Í
 	const float GRAVITY = 0.02f;
 
 	m_pos.y -= GRAVITY;
-	DirectX::XMFLOAT3 StandPos = m_pStand->GetPos();
-	//ã“ã“ã‹ã‚‰ collisionãƒã‚§ãƒƒã‚¯ç”¨
-	if (CheckCollisionRtoR(m_pos.x,m_pos.y,radius,radius,StandPos.x,StandPos.y,1.0f,1.0f))
-	{
-		m_pos.y = 3.0f;
-	}
+
 }
 
 void CFruit::Draw()
 {
-	//å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
+	//•ÏŠ·s—ñ‚ÌŒvZ
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
 	DirectX::XMMATRIX Ry = DirectX::XMMatrixRotationY(0);
@@ -63,39 +49,39 @@ void CFruit::Draw()
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
 	DirectX::XMMATRIX mat = S * R * T;
 
-	//å¤‰æ›è¡Œåˆ—ã‚’GPUã«æ¸¡ã™ãŸã‚ã®å‰å‡¦ç†
+	//•ÏŠ·s—ñ‚ğGPU‚É“n‚·‚½‚ß‚Ì‘Oˆ—
 	mat = DirectX::XMMatrixTranspose(mat);
 	DirectX::XMFLOAT4X4 fMat;
-	//matã‚’fMatã«æ ¼ç´
+	//mat‚ğfMat‚ÉŠi”[
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
-	//ãƒ¢ãƒ‡ãƒ«
+	//ƒ‚ƒfƒ‹
 	if (m_pModel)
 	{
 
-		//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã«å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š
+		//ƒVƒF[ƒ_[‚É•K—v‚Èƒf[ƒ^‚ğİ’è
 		ShaderList::SetWorld(fMat);
 		ShaderList::SetView(m_pCamera->GetViewMatrix());
 		ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
 
-		// ãƒ¢ãƒ‡ãƒ«ã«ä½¿ç”¨ã™ã‚‹å„ç¨®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’è¨­å®š
+		// ƒ‚ƒfƒ‹‚Ég—p‚·‚éŠeíƒVƒF[ƒ_[‚ğİ’è 
 		m_pModel->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
 		m_pModel->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
 
-		// ãƒ¡ãƒƒã‚·ãƒ¥åˆ¥ã«ãƒ¢ãƒ‡ãƒ«ã‚’è¡¨ç¤º
+		// ƒƒbƒVƒ…•Ê‚Éƒ‚ƒfƒ‹‚ğ•\¦ 
 		for (int i = 0; i < m_pModel->GetMeshNum(); ++i) {
 
-			// ãƒ¢ãƒ‡ãƒ«ã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å–å¾—
+			// ƒ‚ƒfƒ‹‚ÌƒƒbƒVƒ…‚ğæ“¾ 
 			const Model::Mesh* mesh = m_pModel->GetMesh(i);
 
-			// ãƒ¡ãƒƒã‚·ãƒ¥ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å–å¾—
+			// ƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒ}ƒeƒŠƒAƒ‹‚ğæ“¾ 
 			Model::Material material = *m_pModel->GetMaterial(mesh->materialID);
 
 
-			// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®š
+			// ƒVƒF[ƒ_[‚Öƒ}ƒeƒŠƒAƒ‹‚ğİ’è 
 			ShaderList::SetMaterial(material);
 
-			// ãƒ¢ãƒ‡ãƒ«ã®æç”»(å†…éƒ¨çš„ã«ä¸€æ‹¬ã§è¡Œã£ã¦ã„ãŸæç”»å‡¦ç†ã‚’ã€ãƒ¡ãƒƒã‚·ãƒ¥ã”ã¨ã®æç”»å‡¦ç†ã«å¤‰æ›´)
+			// ƒ‚ƒfƒ‹‚Ì•`‰æ(“à•”“I‚ÉˆêŠ‡‚Ås‚Á‚Ä‚¢‚½•`‰æˆ—‚ğAƒƒbƒVƒ…‚²‚Æ‚Ì•`‰æˆ—‚É•ÏX) 
 			m_pModel->Draw(i);
 		}
 
