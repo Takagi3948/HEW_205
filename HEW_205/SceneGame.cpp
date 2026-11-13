@@ -82,7 +82,7 @@ void SceneGame::Draw()
 	Geometory::SetView(m_pCamera->GetViewMatrix());
 	Geometory::SetProjection(m_pCamera->GetProjectionMatrix());
 
-	//Geometory::DrawBox();
+	//Geometory::DrawBox(); 
 	m_pGround->Draw();
 	//m_pGoal->Draw();
 	m_pPlayer->Draw();
