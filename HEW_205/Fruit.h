@@ -2,15 +2,25 @@
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
+#include "ShaderList.h"
+#include "Model.h"
+#include "Camera.h"
+#include "CameraDebug.h"
 
-class Goal {
+
+class CFruit {
 private:
-	float m_pos[3];		//座標
-	float m_time;	//アニメーション経過時間
+	DirectX::XMFLOAT3 m_pos;		//座標
+	float radius;	//半径
+	Model* m_pModel;
+	Camera* m_pCamera;
+
 
 public:
-	Goal();
-	~Goal();
+
+
+	CFruit();
+	~CFruit();
 
 	//更新処理
 	void Update();

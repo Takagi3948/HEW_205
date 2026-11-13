@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "Player.h"
 #include "Stand.h"
+#include "Fruit.h"
 
 
 class SceneGame : public Scene
@@ -27,6 +28,7 @@ private:
 	Model* m_pModel;
 	CPlayer* m_pPlayer;
 	CStand* m_pStand;
+	CFruit* m_pFruit;
 
 	
 
