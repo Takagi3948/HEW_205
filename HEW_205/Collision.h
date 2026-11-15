@@ -12,6 +12,11 @@ public:
 		eNone,
 		eBox,
 		eSphere,
+		ePlane,
+		eRay,
+		eLine,
+		ePoint,
+		eTriangle,
 	};
 
 	//---  
@@ -23,6 +28,25 @@ public:
 		DirectX::XMFLOAT3  center;  //  
 		float     radius;  //  
 	};
+	struct Plane { //  
+		DirectX::XMFLOAT3 pos;   //  
+		DirectX::XMFLOAT3 normal;  //  
+	};
+	struct Ray { // ( ) 
+		DirectX::XMFLOAT3 origin;  //  
+		DirectX::XMFLOAT3 dir;  //  
+	};
+	struct Line { //  
+		DirectX::XMFLOAT3 start;  //  
+		DirectX::XMFLOAT3 end;  //  
+	};
+	struct Point {  //  
+		DirectX::XMFLOAT3 pos;  //  
+	};
+	struct Triangle { //  
+		DirectX::XMFLOAT3 point[3]; //  
+	};
+
 
 	//---  
 	struct Info {
@@ -30,6 +54,11 @@ public:
 		union {
 			Box box;
 			Sphere sphere;
+			Plane plane;
+			Ray  ray;
+			Line line;
+			Point  point;
+			Triangle triangle;
 		};
 	};
 
@@ -49,6 +78,12 @@ public:
 	//‹…“¯Žm‚Ì”»’è
 	static Result Hit(Sphere a, Sphere b);
 
+	//‹…‚ÆŽlŠp
 	static Result Hit(Sphere a, Box b);
 
+	static Result Hit(Plane plane, Ray ray, float lenght);
+	static Result Hit(Plane plane, Line line);
+
+	static Result Hit(Point point, Triangle triangle);
 };
+

@@ -121,3 +121,119 @@ Collision::Result Collision::Hit(Sphere a, Box b)
 
 	return out;
 }
+
+
+Collision::Result Collision::Hit(Plane plane, Ray ray, float lenght)
+{
+	//  
+	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&ray.origin);
+	DirectX::XMVECTOR vRay = DirectX::XMLoadFloat3(&ray.dir);
+	//  
+	vRay = DirectX::XMVector3Normalize(vRay);
+	vRay = DirectX::XMVectorScale(vRay, lenght);
+	//  
+	Line line = {};
+	line.start = ray.origin;
+	DirectX::XMStoreFloat3(&line.end, DirectX::XMVectorAdd(vPos, vRay));
+	//  
+	return Hit(plane, line);
+}
+
+
+Collision::Result Collision::Hit(Plane plane, Line line)
+{
+	Result out = {};
+	//  
+	DirectX::XMVECTOR vPlanePos = DirectX::XMLoadFloat3(&plane.pos);
+	DirectX::XMVECTOR vPlaneN = DirectX::XMLoadFloat3(&plane.normal);
+	DirectX::XMVECTOR vLineStart = DirectX::XMLoadFloat3(&line.start);
+	DirectX::XMVECTOR vLineEnd = DirectX::XMLoadFloat3(&line.end);
+	vPlaneN = DirectX::XMVector3Normalize(vPlaneN);
+
+	//  
+	DirectX::XMVECTOR vToStart = DirectX::XMVectorSubtract(vLineStart, vPlanePos);
+	DirectX::XMVECTOR vToEnd = DirectX::XMVectorSubtract(vLineEnd, vPlanePos);
+	DirectX::XMVECTOR vDotStart = DirectX::XMVector3Dot(vToStart, vPlaneN);
+	DirectX::XMVECTOR vDotEnd = DirectX::XMVector3Dot(vToEnd, vPlaneN);
+
+	//  
+	float dotStart, dotEnd;
+	DirectX::XMStoreFloat(&dotStart, vDotStart);
+	DirectX::XMStoreFloat(&dotEnd, vDotEnd);
+
+	if (dotStart > 0.0f && dotEnd < 0.0f) {
+		//  
+		dotStart = fabsf(dotStart);
+		dotEnd = fabsf(dotEnd);
+		float rate = dotStart / (dotStart + dotEnd); //  
+		DirectX::XMVECTOR vDist = DirectX::XMVectorSubtract(vLineEnd, vLineStart);
+		vDist = DirectX::XMVectorScale(vDist, rate); //  
+		vDist = DirectX::XMVectorAdd(vLineStart, vDist); //  
+
+		//  
+		out.isHit = true;
+		out.normal = plane.normal;
+		DirectX::XMStoreFloat3(&out.point, vDist);
+	}
+	return out;
+}
+
+
+Collision::Result Collision::Hit(Point point, Triangle triangle)
+{
+	Result out = {};
+	//  
+	DirectX::XMVECTOR vTriPoint[3] = {
+	 DirectX::XMLoadFloat3(&triangle.point[0]),
+	 DirectX::XMLoadFloat3(&triangle.point[1]),
+	 DirectX::XMLoadFloat3(&triangle.point[2]),
+	};
+	DirectX::XMVECTOR vPoint = DirectX::XMLoadFloat3(&point.pos);
+
+	//  
+	DirectX::XMVECTOR vEdge[3];
+	DirectX::XMVECTOR vToPoint[3];
+	for (int i = 0; i < 3; ++i) {
+		//  
+		vEdge[i] = DirectX::XMVectorSubtract(vTriPoint[(i + 1) % 3], vTriPoint[i]);
+		vEdge[i] = DirectX::XMVector3Normalize(vEdge[i]);
+		//  
+		vToPoint[i] = DirectX::XMVectorSubtract(vPoint, vTriPoint[i]);
+		vToPoint[i] = DirectX::XMVector3Normalize(vToPoint[i]);
+	}
+
+	//  
+	DirectX::XMVECTOR vNormal;
+	vNormal = DirectX::XMVector3Cross(vEdge[0], vEdge[1]);
+	vNormal = DirectX::XMVector3Normalize(vNormal);
+
+	//  
+	float dot[3];
+	DirectX::XMStoreFloat(&dot[0], DirectX::XMVector3Dot(vNormal, vToPoint[0]));
+	if (fabsf(dot[0]) > FLT_EPSILON) { // FLT_EPSILON ÅÇ 0 0 float 
+		return out; //  
+	}
+
+	//  
+	DirectX::XMVECTOR vCross[3];
+	for (int i = 0; i < 3; ++i) {
+		vCross[i] = DirectX::XMVector3Cross(vEdge[i], vToPoint[i]);
+	}
+
+	//  
+	for (int i = 0; i < 3; ++i) {
+		DirectX::XMStoreFloat(&dot[i], DirectX::XMVector3Dot(vNormal, vCross[i]));
+	}
+
+	//  
+	if (dot[0] >= 0.0f &&
+		dot[1] >= 0.0f &&
+		dot[2] >= 0.0f) 
+	{
+		out.isHit = true;
+		out.point = point.pos;
+		DirectX::XMStoreFloat3(&out.normal, vNormal);
+	}
+
+	return out;
+}
