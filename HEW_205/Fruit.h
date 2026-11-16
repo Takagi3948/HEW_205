@@ -1,4 +1,4 @@
-
+ï»¿
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
@@ -6,15 +6,17 @@
 #include "Model.h"
 #include "Camera.h"
 #include "CameraDebug.h"
-
+#include "Ground.h"
+#include "Stand.h"
 
 class CFruit {
 private:
-	DirectX::XMFLOAT3 m_pos;		//À•W
-	float radius;	//”¼Œa
+	DirectX::XMFLOAT3 m_pos;		//åº§æ¨™
+	float radius;	//åŠå¾„
 	Model* m_pModel;
 	Camera* m_pCamera;
-
+	Ground* m_pGround;
+	CStand* m_pStand;
 
 public:
 
@@ -22,14 +24,14 @@ public:
 	CFruit();
 	~CFruit();
 
-	//XVˆ—
+	//æ›´æ–°å‡¦ç†
 	void Update();
 
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	void Draw();
 
 
-	//À•W‚Ìİ’è
+	//åº§æ¨™ã®è¨­å®š
 	void SetPos(float x, float y, float z);
 
 };

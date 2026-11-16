@@ -1,27 +1,31 @@
-#pragma once
+ï»¿#pragma once
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
+#include "Collision.h"
 
 class Ground {
 private:
-	float m_pos[3];		//À•W
-	float m_scale[3];	//Šg‘å—¦
+	float m_pos[3];		//åº§æ¨™
+	float m_scale[3];	//æ‹¡å¤§ç‡
 
 public:
 	Ground();
 	~Ground();
 
-	//XVˆ—
+	//æ›´æ–°å‡¦ç†
 	void Update();
 
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	void Draw();
 
 
-	//À•W‚Ìİ’è
+	//åº§æ¨™ã®è¨­å®š
 	void SetPos(float x, float y, float z);
 
-	//Šg‘å—¦‚Ìİ’è
+	//æ‹¡å¤§ç‡ã®è¨­å®š
 	void SetScale(float x, float y, float z);
+
+	// Boxå‹ã‚’æ¸¡ã™å‡¦ç†(Pos,Scale)
+	Collision::Box GetBox();
 };
