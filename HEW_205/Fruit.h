@@ -15,7 +15,6 @@ private:
 	Model* m_pModel;
 	Camera* m_pCamera;
 
-
 public:
 
 
@@ -26,10 +25,12 @@ public:
 	void Update();
 
 	//•`‰æˆ—
-	void Draw();
+	//ƒJƒƒ‰‚Ìæ“¾
+	void Draw(Camera*);
 
 
 	//À•W‚Ìİ’è
 	void SetPos(float x, float y, float z);
+
 
 };

@@ -103,7 +103,7 @@ void SceneGame::Draw()
 	m_pPlayer->Draw();
 	m_pStand->Draw();
 
-	m_pFruit->Draw();
+	m_pFruit->Draw(m_pCamera);
 }
 
 
