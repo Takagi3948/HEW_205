@@ -1,4 +1,4 @@
-#include "Ground.h"
+ï»¿#include "Ground.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 
@@ -18,19 +18,19 @@ void Ground::Update()
 
 void Ground::Draw()
 {
-	//•ÏŠ·s—ñ‚ÌŒvZ
+	//å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos[0], m_pos[1], m_pos[2]);
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_scale[0], m_scale[1], m_scale[2]);
 	DirectX::XMMATRIX mat = S * T;
 
-	//•ÏŠ·s—ñ‚ğGPU‚É“n‚·‚½‚ß‚Ì‘Oˆ—
+	//å¤‰æ›è¡Œåˆ—ã‚’GPUã«æ¸¡ã™ãŸã‚ã®å‰å‡¦ç†
 	mat = DirectX::XMMatrixTranspose(mat);
 	DirectX::XMFLOAT4X4 fMat;
-	//mat‚ğfMat‚ÉŠi”[
+	//matã‚’fMatã«æ ¼ç´
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
 
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	Geometory::SetWorld(fMat);
 	Geometory::DrawBox();
 
@@ -50,3 +50,7 @@ void Ground::SetScale(float x, float y, float z)
 	m_scale[2] = z;
 }
 
+Collision::Box Ground::GetBox()
+{
+	return Collision::Box{ {m_pos[0],m_pos[1],m_pos[2]},{m_scale[0],m_scale[1],m_scale[2] } };
+}
