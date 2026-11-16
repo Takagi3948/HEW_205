@@ -152,6 +152,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LeftPlayer.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MeshBuffer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="LeftPlayer.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MeshBuffer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />

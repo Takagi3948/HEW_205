@@ -1,6 +1,6 @@
 #include "SceneGame.h"
 #include "Geometory.h"
-#include "CameraDebug.h"
+#include "MainCamera.h"
 #include "ShaderList.h"
 
 
@@ -19,7 +19,9 @@ SceneGame::SceneGame()
 	m_pGoal = new Goal;
 	m_pGoal->SetPos(0.0f, 1.0f, 0.0f);
 
-	m_pCamera = new CameraDebug(); //Œp³‚³‚ê‚½Debug‚ÌƒNƒ‰ƒX‚ð“ü‚ê‚é
+	//m_pCamera = new CameraDebug(); //Œp³‚³‚ê‚½Debug‚ÌƒNƒ‰ƒX‚ð“ü‚ê‚é
+
+	m_pCamera = new MainCamera();
 
 	m_pModel = new Model();
 
@@ -70,8 +72,11 @@ void SceneGame::Update()
 {
 	m_pGround->Update();
 	m_pGoal->Update();
-	m_pCamera->Update();
+	
 	m_pPlayer->Update();
+
+	m_pCamera->SetPos(m_pPlayer->GetPos());
+	m_pCamera->Update();
 
 	m_pStand->SetPos(m_pPlayer->GetPos());
 	m_pStand->Update();
