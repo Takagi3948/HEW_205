@@ -361,3 +361,20 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+# 実行ファイル
+*.exe
+*.dll
+
+# コンパイル生成物
+*.obj
+*.pdb
+*.ilk
+*.pch
+
+# Visual Studioの生成物
+.vs/
+Debug/
+Release/
+x64/

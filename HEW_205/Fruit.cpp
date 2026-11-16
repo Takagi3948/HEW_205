@@ -39,7 +39,6 @@ void CFruit::Update()
 
 void CFruit::Draw(Camera* camera)
 {
-
 	m_pCamera = camera;
 
 	//•ÏŠ·s—ñ‚ÌŒvZ
