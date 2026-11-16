@@ -1,4 +1,4 @@
-#include "Stand.h"
+ï»¿#include "Stand.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 #include"Defines.h"
@@ -9,6 +9,7 @@ CStand::CStand()
 	, angle(0)
 	, LeftPos{ 0.0f,0.0f }
 	, RightPos{ 0.0f,0.0f }
+	,m_size(3.0f,0.5f,0.6f)
 	//, m_collision()
 {
 	/*m_collision.type = Collision::eBox;
@@ -34,29 +35,29 @@ void CStand::Update()
 
 void CStand::Draw()
 {
-	//•ÏŠ·s—ñ‚ÌŒvZ
+	//å¤‰æ›è¡Œåˆ—ã®è¨ˆç®—
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
 	DirectX::XMMATRIX Ry = DirectX::XMMatrixRotationY(0);
 	DirectX::XMMATRIX Rz = DirectX::XMMatrixRotationZ(angle);
 	DirectX::XMMATRIX R = Rx * Ry * Rz;
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(3.0f, 0.5f, 0.6f);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_size.x,m_size.y, m_size.z);//æ–°ãŸã«m_sizeã‚’ä½œã£ãŸã®ã§ã“ã¡ã‚‰ã§ä»£ç”¨ã€‚
 	DirectX::XMMATRIX mat = S * R * T;
 
-	//•ÏŠ·s—ñ‚ğGPU‚É“n‚·‚½‚ß‚Ì‘Oˆ—
+	//å¤‰æ›è¡Œåˆ—ã‚’GPUã«æ¸¡ã™ãŸã‚ã®å‰å‡¦ç†
 	mat = DirectX::XMMatrixTranspose(mat);
 	DirectX::XMFLOAT4X4 fMat;
-	//mat‚ğfMat‚ÉŠi”[
+	//matã‚’fMatã«æ ¼ç´
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
 
-	//•`‰æˆ—
+	//æç”»å‡¦ç†
 	Geometory::SetWorld(fMat);
 	Geometory::DrawBox();
 
 }
 
-//“ñl‚ÌêŠ‚©‚çêŠEŠp“x‚ÌŒvZ
+//äºŒäººã®å ´æ‰€ã‹ã‚‰å ´æ‰€ãƒ»è§’åº¦ã®è¨ˆç®—
 void CStand::SetPos(DirectX::XMFLOAT4 Pos)
 {
 	float dx = Pos.z - Pos.x;
@@ -69,3 +70,7 @@ void CStand::SetPos(DirectX::XMFLOAT4 Pos)
 
 }
 
+Collision::Box CStand::GetBox()
+{
+	return Collision::Box{ m_pos,{3.0f,0.5f,0.6f} };
+}
