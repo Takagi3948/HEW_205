@@ -27,4 +27,6 @@ public:
 	DirectX::XMFLOAT3 GetPos();
 	DirectX::XMFLOAT3 GetLook();
 
+	virtual void SetPos(DirectX::XMFLOAT4 Pos);
+
 };
