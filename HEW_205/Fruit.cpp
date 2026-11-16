@@ -32,7 +32,7 @@ CFruit::~CFruit()
 void CFruit::Update()
 {
 	//èdóÕ
-	const float GRAVITY = 0.02f;
+	const float GRAVITY = 0.00f;
 
 	m_pos.y -= GRAVITY;
 

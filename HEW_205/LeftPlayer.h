@@ -1,4 +1,4 @@
-
+#pragma once
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
