@@ -36,14 +36,21 @@ CFruit::~CFruit()
 void CFruit::Update()
 {
 	//重力
-	const float GRAVITY = 0.00f;
+	const float GRAVITY = 0.05f;
 
 	m_pos.y -= GRAVITY;
 
 	//各値の取得
-	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,m_pos.y,m_pos.z} , radius};
+	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y+0.5f),m_pos.z} , radius/10};// 通常値だと当たる前にFlyしやがったので変更。(無理やり)
 	Collision::Box GroundBox = m_pGround->GetBox();
-	Collision::Box StandBox = m_pStand->GetBox();
+	//Collision::Box StandBox = m_pStand->GetBox();
+
+	//Collision::Result ResultStand = Collision::Result{ Collision::Hit(FruitSphere,StandBox) };
+	////台と当たったら、仮で座標を3.0fに飛ばす。
+	//if (ResultStand.isHit)
+	//{
+	//	m_pos.y = 3.0f;
+	//}
 
 	Collision::Result RsultGround = Collision::Result{Collision::Hit(FruitSphere,GroundBox)};
 	//グラウンドと当たったら仮でy座標を-9.0(画面外)に飛ばす。
