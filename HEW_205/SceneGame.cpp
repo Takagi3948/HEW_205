@@ -9,9 +9,10 @@ SceneGame::SceneGame()
 	,m_pGoal(nullptr)
 	,m_pCamera(nullptr)
 	,m_pModel(nullptr)
-	,m_pPlayer(nullptr)
+	,m_pPlayerManager(nullptr)
 	,m_pStand(nullptr)
 	,m_pFruit(nullptr)
+	,m_pEnemy{nullptr, nullptr, nullptr}
 {
 	m_pGround = new Ground;
 	m_pGround->SetPos(0.0f, -0.25f, 0.0f);
@@ -26,11 +27,19 @@ SceneGame::SceneGame()
 
 	m_pModel = new Model();
 
-	m_pPlayer = new CPlayer();
+	m_pPlayerManager = new CPlayerManager();
 
 	m_pStand = new CStand();
 
 	m_pFruit = new CFruit();
+
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		m_pEnemy[i] = new CEnemy;
+	}
+	m_pEnemy[0]->SetPos(5.0f, 3.0f, 0.0f);
+	m_pEnemy[1]->SetPos(0.0f, 5.0f, 0.0f);
+	m_pEnemy[2]->SetPos(-7.0f, 4.0f, 0.0f);
 
 	//深度テストの有効化
 	SetDepthTest(DEPTH_ENABLE);
@@ -58,10 +67,10 @@ SceneGame::~SceneGame()
 		delete m_pModel;
 		m_pModel = nullptr;
 	}
-	if (m_pPlayer)
+	if (m_pPlayerManager)
 	{
-		delete m_pPlayer;
-		m_pPlayer = nullptr;
+		delete m_pPlayerManager;
+		m_pPlayerManager = nullptr;
 	}
 	if (m_pStand)
 	{
@@ -73,7 +82,14 @@ SceneGame::~SceneGame()
 		delete m_pFruit;
 		m_pFruit = nullptr;
 	}
-
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		if (m_pEnemy[i])
+		{
+			delete m_pEnemy[i];
+			m_pEnemy[i] = nullptr;
+		}
+	}
 }
 
 void SceneGame::Update()
@@ -81,15 +97,19 @@ void SceneGame::Update()
 	m_pGround->Update();
 	m_pGoal->Update();
 	
-	m_pPlayer->Update();
+	m_pPlayerManager->Update();
 
-	m_pCamera->SetPos(m_pPlayer->GetPos());
+	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
 
-	m_pStand->SetPos(m_pPlayer->GetPos());
+	m_pStand->SetPos(m_pPlayerManager->GetPos());
 	m_pStand->Update();
 
 	m_pFruit->Update();
+
+	m_pEnemy[0]->Update();
+	m_pEnemy[1]->Update();
+	m_pEnemy[2]->Update();
 }
 
 void SceneGame::Draw()
@@ -100,10 +120,14 @@ void SceneGame::Draw()
 	//Geometory::DrawBox(); 
 	m_pGround->Draw();
 	//m_pGoal->Draw();
-	m_pPlayer->Draw();
+	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 
-	m_pFruit->Draw();
+	m_pFruit->Draw(m_pCamera);
+
+	m_pEnemy[0]->Draw();
+	m_pEnemy[1]->Draw();
+	m_pEnemy[2]->Draw();
 }
 
 

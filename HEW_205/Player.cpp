@@ -5,154 +5,58 @@
 #include "Input.h"
 
 CPlayer::CPlayer()
-    :m_pLeftPlayer(new CLeftPlayer())
-    , m_pRightPlayer(new CRightPlayer())
-    , Position{ 0.0f,0.0f,0.0f,0.0f }
+	:m_pos{ 0.0f,0.0f,0.0f }
 {
-    m_pLeftPlayer->SetPos(-1.0f, 0.5f, 0.0f);
-    //m_pLeftPlater->SetPos(-1.0f, 0.5f, 0.0f);
-
-    m_pRightPlayer->SetPos(1.0f, 0.5f, 0.0f);
-    //m_pRightPlater->SetPos(1.0f, 0.5f, 0.0f);
 }
-
 
 CPlayer::~CPlayer()
 {
-    if (m_pLeftPlayer)
-    {
-        delete m_pLeftPlayer;
-        m_pLeftPlayer = nullptr;
-    }
-
-    if (m_pRightPlayer)
-    {
-        delete m_pRightPlayer;
-        m_pRightPlayer = nullptr;
-    }
 }
 
 void CPlayer::Update()
 {
-    // プレイヤー座標
-    static float leftX = -1.0f;
-    static float leftY = 0.5f;
-
-    static float rightX = 1.0f;
-    static float rightY = 0.5f;
-
-    // ジャンプ用
-    static float leftVelocityY = 1.0f;
-    static float rightVelocityY = 0.0f;
-
-    static bool leftJump = false;
-    static bool rightJump = false;
-
-    // 移動速度
-    const float MOVE_SPEED = 0.025f;
-
-    // 重力
-    const float GRAVITY = 0.012f;
-
-    // ジャンプ力
-    const float JUMP_POWER = 0.125f;
-
-    // 左プレイヤー移動
-    if (IsKeyPress('A'))
-    {
-        leftX -= MOVE_SPEED;
-        rightX -= MOVE_SPEED;
-    }
-    if (IsKeyPress(VK_LEFT))
-    {
-        leftX -= MOVE_SPEED;
-        rightX -= MOVE_SPEED;
-    }
+	//ジャンプ
 
 
-    if (IsKeyPress('D'))
-    {
-        leftX += MOVE_SPEED;
-        rightX += MOVE_SPEED;
-    }
-    if (IsKeyPress(VK_RIGHT))
-    {
-        leftX += MOVE_SPEED;
-        rightX += MOVE_SPEED;
-    }
+	//重力処理
 
-
-    // 左プレイヤージャンプ
-    if (IsKeyTrigger('W') && !leftJump)
-    {
-        leftVelocityY = JUMP_POWER;
-        leftJump = true;
-    }
-
-    // 右プレイヤージャンプ
-    if (IsKeyTrigger(VK_UP) && !rightJump)
-    {
-        rightVelocityY = JUMP_POWER;
-        rightJump = true;
-    }
-
-    // 左ジャンプ更新
-    if (leftJump)
-    {
-        leftY += leftVelocityY;
-
-        //ジャンプしてる時だけ重力を作用
-        leftVelocityY -= GRAVITY;
-
-        if (leftY <= 0.5f)
-        {
-            leftY = 0.5f;
-            leftVelocityY = 0.0f;
-            leftJump = false;
-        }
-    }
-
-    // 右ジャンプ更新
-    if (rightJump)
-    {
-        rightY += rightVelocityY;
-
-        //ジャンプしてる時だけ重力を作用
-        rightVelocityY -= GRAVITY;
-
-        if (rightY <= 0.5f)
-        {
-            rightY = 0.5f;
-            rightVelocityY = 0.0f;
-            rightJump = false;
-        }
-    }
-
-    // 座標を反映
-    m_pLeftPlayer->SetPos(leftX, leftY, 0.0f);
-    m_pRightPlayer->SetPos(rightX, rightY, 0.0f);
-
-    m_pLeftPlayer->Update();
-    m_pRightPlayer->Update();
-
+	//当たり判定
 
 }
 
 void CPlayer::Draw()
 {
-    m_pLeftPlayer->Draw();
-    m_pRightPlayer->Draw();
+	//変換行列の計算
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos[0], m_pos[1], m_pos[2]);
+	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
+	DirectX::XMMATRIX Ry = DirectX::XMMatrixRotationY(0);
+	DirectX::XMMATRIX Rz = DirectX::XMMatrixRotationZ(0);
+	DirectX::XMMATRIX R = Rx * Ry * Rz;
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.5f, 1.0f, 0.5f);
+	DirectX::XMMATRIX mat = S * R * T;
+
+	//変換行列をGPUに渡すための前処理
+	mat = DirectX::XMMatrixTranspose(mat);
+	DirectX::XMFLOAT4X4 fMat;
+	//matをfMatに格納
+	DirectX::XMStoreFloat4x4(&fMat, mat);
+
+
+	//描画処理
+	Geometory::SetWorld(fMat);
+	Geometory::DrawBox();
+
 }
 
-
-DirectX::XMFLOAT4 CPlayer::GetPos()
+void CPlayer::SetPos(float x, float y, float z)
 {
-    DirectX::XMFLOAT2 Left = m_pLeftPlayer->GetPos();
-    DirectX::XMFLOAT2 Right = m_pRightPlayer->GetPos();
-    Position = { Left.x,Left.y,Right.x,Right.y };
-
-    return Position;
+	m_pos[0] = x;
+	m_pos[1] = y;
+	m_pos[2] = z;
 }
 
-
-
+DirectX::XMFLOAT2 CPlayer::GetPos()
+{
+	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
+	return Pos;
+}

@@ -11,8 +11,8 @@
 
 class CFruit {
 private:
-	DirectX::XMFLOAT3 m_pos;		//座標
-	float radius;	//半径
+	DirectX::XMFLOAT3 m_pos;		//���W
+	float radius;	//���a
 	Model* m_pModel;
 	Camera* m_pCamera;
 	Ground* m_pGround;
@@ -24,14 +24,16 @@ public:
 	CFruit();
 	~CFruit();
 
-	//更新処理
+	//�X�V����
 	void Update();
 
-	//描画処理
-	void Draw();
+	//�`�揈��
+	//�J�����̎擾
+	void Draw(Camera*);
 
 
-	//座標の設定
+	//���W�̐ݒ�
 	void SetPos(float x, float y, float z);
+
 
 };

@@ -147,18 +147,18 @@
     <ClCompile Include="CameraDebug.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="DirectX.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Geometory.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="LeftPlayer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainCamera.cpp" />
     <ClCompile Include="MeshBuffer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="RightPlayer.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -176,6 +176,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DirectX.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="Geometory.h" />
     <ClInclude Include="Goal.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="MeshBuffer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="RightPlayer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneGame.h" />
