@@ -123,7 +123,7 @@ void SceneGame::Draw()
 	m_pPlayer->Draw();
 	m_pStand->Draw();
 
-	m_pFruit->Draw();
+	m_pFruit->Draw(m_pCamera);
 
 	m_pEnemy[0]->Draw();
 	m_pEnemy[1]->Draw();
