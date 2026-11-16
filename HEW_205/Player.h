@@ -2,14 +2,10 @@
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
-#include "LeftPlayer.h"
-#include "RightPlayer.h"
 
 class CPlayer {
 private:
-	CLeftPlayer* m_pLeftPlayer;
-	CRightPlayer* m_pRightPlayer;
-	DirectX::XMFLOAT4 Position;
+	float m_pos[3];		//À•W
 
 public:
 	CPlayer();
@@ -21,6 +17,11 @@ public:
 	//•`‰æˆ—
 	void Draw();
 
-	DirectX::XMFLOAT4 GetPos();
+
+	//À•W‚Ìİ’è
+	void SetPos(float x, float y, float z);
+	DirectX::XMFLOAT2 GetPos();
+
+
 
 };

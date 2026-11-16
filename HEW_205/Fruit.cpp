@@ -98,3 +98,4 @@ void CFruit::SetPos(float x, float y, float z)
 	m_pos.y = y;
 	m_pos.z = z;
 }
+

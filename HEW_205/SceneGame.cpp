@@ -9,7 +9,7 @@ SceneGame::SceneGame()
 	,m_pGoal(nullptr)
 	,m_pCamera(nullptr)
 	,m_pModel(nullptr)
-	,m_pPlayer(nullptr)
+	,m_pPlayerManager(nullptr)
 	,m_pStand(nullptr)
 	,m_pFruit(nullptr)
 	,m_pEnemy{nullptr, nullptr, nullptr}
@@ -27,7 +27,7 @@ SceneGame::SceneGame()
 
 	m_pModel = new Model();
 
-	m_pPlayer = new CPlayer();
+	m_pPlayerManager = new CPlayerManager();
 
 	m_pStand = new CStand();
 
@@ -67,10 +67,10 @@ SceneGame::~SceneGame()
 		delete m_pModel;
 		m_pModel = nullptr;
 	}
-	if (m_pPlayer)
+	if (m_pPlayerManager)
 	{
-		delete m_pPlayer;
-		m_pPlayer = nullptr;
+		delete m_pPlayerManager;
+		m_pPlayerManager = nullptr;
 	}
 	if (m_pStand)
 	{
@@ -97,12 +97,12 @@ void SceneGame::Update()
 	m_pGround->Update();
 	m_pGoal->Update();
 	
-	m_pPlayer->Update();
+	m_pPlayerManager->Update();
 
-	m_pCamera->SetPos(m_pPlayer->GetPos());
+	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
 
-	m_pStand->SetPos(m_pPlayer->GetPos());
+	m_pStand->SetPos(m_pPlayerManager->GetPos());
 	m_pStand->Update();
 
 	m_pFruit->Update();
@@ -120,7 +120,7 @@ void SceneGame::Draw()
 	//Geometory::DrawBox(); 
 	m_pGround->Draw();
 	//m_pGoal->Draw();
-	m_pPlayer->Draw();
+	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 
 	m_pFruit->Draw(m_pCamera);
