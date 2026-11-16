@@ -15,18 +15,19 @@ Collision::Result Collision::Hit(Info a, Info b)
 	return out;
 }
 
+//四角同士の当たり判定
 Collision::Result Collision::Hit(Box a, Box b)
 {
 	Result out = {};
-	// VECTOR 
+	// VECTOR型に変換
 	DirectX::XMVECTOR vPosA = DirectX::XMLoadFloat3(&a.center);
 	DirectX::XMVECTOR vPosB = DirectX::XMLoadFloat3(&b.center);
 	DirectX::XMVECTOR vSizeA = DirectX::XMLoadFloat3(&a.size);
 	DirectX::XMVECTOR vSizeB = DirectX::XMLoadFloat3(&b.size);
-	//  
+	//  ボックスの半分のサイズを取得
 	vSizeA = DirectX::XMVectorScale(vSizeA, 0.5f);
 	vSizeB = DirectX::XMVectorScale(vSizeB, 0.5f);
-	//  
+	//  ボックスの各軸の最大値、最小値を取得
 	DirectX::XMVECTOR vMaxA = DirectX::XMVectorAdd(vPosA, vSizeA);
 	DirectX::XMVECTOR vMinA = DirectX::XMVectorSubtract(vPosA, vSizeA);
 	DirectX::XMVECTOR vMaxB = DirectX::XMVectorAdd(vPosB, vSizeB);
@@ -37,17 +38,17 @@ Collision::Result Collision::Hit(Box a, Box b)
 	DirectX::XMStoreFloat3(&maxB, vMaxB);
 	DirectX::XMStoreFloat3(&minB, vMinB);
 
-	//  
+	//  ボックスの面同士の関係から当たり判定を行う
 	out.isHit = false;
 	if (maxA.x >= minB.x && minA.x <= maxB.x) {
 		if (maxA.y >= minB.y && minA.y <= maxB.y) {
 			if (maxA.z >= minB.z && minA.z <= maxB.z) {
 				out.isHit = true;
-				//  
+				//  書く軸のめり込み量を計算
 				out.normal.x = min(maxA.x - minB.x, maxB.x - minA.x);
 				out.normal.y = min(maxA.y - minB.y, maxB.y - minA.y) * 0.5f;
 				out.normal.z = min(maxA.z - minB.z, maxB.z - minA.z);
-				//  
+				//  めり込み量が少ない面を当たった面とみなし、面の法線を計算する
 				if (out.normal.x < out.normal.y) {
 					if (out.normal.x < out.normal.z)
 						out.normal = DirectX::XMFLOAT3(
@@ -70,10 +71,11 @@ Collision::Result Collision::Hit(Box a, Box b)
 	return out;
 }
 
+//球同士の当たり判定
 Collision::Result Collision::Hit(Sphere a, Sphere b)
 {
 	Result out = {};
-	//  
+	// 計算に必要なデータを計算 
 	DirectX::XMVECTOR vPosA = DirectX::XMLoadFloat3(&a.center);
 	DirectX::XMVECTOR vPosB = DirectX::XMLoadFloat3(&b.center);
 	DirectX::XMVECTOR vDist = DirectX::XMVectorSubtract(vPosA, vPosB);
@@ -85,6 +87,7 @@ Collision::Result Collision::Hit(Sphere a, Sphere b)
 	return out;
 }
 
+//球と四角の当たり判定
 Collision::Result Collision::Hit(Sphere a, Box b)
 {
 	Result out = {};
@@ -122,55 +125,55 @@ Collision::Result Collision::Hit(Sphere a, Box b)
 	return out;
 }
 
-
+//平面とレイの当たり判定
 Collision::Result Collision::Hit(Plane plane, Ray ray, float lenght)
 {
-	//  
+	//  計算用の型に変換
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&ray.origin);
 	DirectX::XMVECTOR vRay = DirectX::XMLoadFloat3(&ray.dir);
-	//  
+	// ベクトルの長さを計算 
 	vRay = DirectX::XMVector3Normalize(vRay);
 	vRay = DirectX::XMVectorScale(vRay, lenght);
-	//  
+	//  計算結果をもとに線分の情報を作成
 	Line line = {};
 	line.start = ray.origin;
 	DirectX::XMStoreFloat3(&line.end, DirectX::XMVectorAdd(vPos, vRay));
-	//  
+	//  平面と直線の当たり判定を実行
 	return Hit(plane, line);
 }
 
-
+//平面と直線の当たり判定
 Collision::Result Collision::Hit(Plane plane, Line line)
 {
 	Result out = {};
-	//  
+	//  計算に必要なパラメータを定義
 	DirectX::XMVECTOR vPlanePos = DirectX::XMLoadFloat3(&plane.pos);
 	DirectX::XMVECTOR vPlaneN = DirectX::XMLoadFloat3(&plane.normal);
 	DirectX::XMVECTOR vLineStart = DirectX::XMLoadFloat3(&line.start);
 	DirectX::XMVECTOR vLineEnd = DirectX::XMLoadFloat3(&line.end);
 	vPlaneN = DirectX::XMVector3Normalize(vPlaneN);
 
-	//  
+	//  平面の一点から線分の始点と終点に向かうベクトルを計算
 	DirectX::XMVECTOR vToStart = DirectX::XMVectorSubtract(vLineStart, vPlanePos);
 	DirectX::XMVECTOR vToEnd = DirectX::XMVectorSubtract(vLineEnd, vPlanePos);
 	DirectX::XMVECTOR vDotStart = DirectX::XMVector3Dot(vToStart, vPlaneN);
 	DirectX::XMVECTOR vDotEnd = DirectX::XMVector3Dot(vToEnd, vPlaneN);
 
-	//  
+	// 各内積から平面を貫通しているか判定
 	float dotStart, dotEnd;
 	DirectX::XMStoreFloat(&dotStart, vDotStart);
 	DirectX::XMStoreFloat(&dotEnd, vDotEnd);
 
 	if (dotStart > 0.0f && dotEnd < 0.0f) {
-		//  
+		//  各内積の値を絶対値に変換して、衝突位置までのベクトルを計算
 		dotStart = fabsf(dotStart);
 		dotEnd = fabsf(dotEnd);
-		float rate = dotStart / (dotStart + dotEnd); //  
+		float rate = dotStart / (dotStart + dotEnd); //  衝突面までの距離の割合を計算
 		DirectX::XMVECTOR vDist = DirectX::XMVectorSubtract(vLineEnd, vLineStart);
-		vDist = DirectX::XMVectorScale(vDist, rate); //  
-		vDist = DirectX::XMVectorAdd(vLineStart, vDist); //  
+		vDist = DirectX::XMVectorScale(vDist, rate); //  線分のベクトルを衝突面までの長さに変換
+		vDist = DirectX::XMVectorAdd(vLineStart, vDist); // 視点からベクトル分移動 
 
-		//  
+		//  平面との当たり判定の結果を格納
 		out.isHit = true;
 		out.normal = plane.normal;
 		DirectX::XMStoreFloat3(&out.point, vDist);
@@ -178,11 +181,11 @@ Collision::Result Collision::Hit(Plane plane, Line line)
 	return out;
 }
 
-
+//点と三角形の当たり判定
 Collision::Result Collision::Hit(Point point, Triangle triangle)
 {
 	Result out = {};
-	//  
+	//  計算用の型に変換
 	DirectX::XMVECTOR vTriPoint[3] = {
 	 DirectX::XMLoadFloat3(&triangle.point[0]),
 	 DirectX::XMLoadFloat3(&triangle.point[1]),
@@ -190,42 +193,42 @@ Collision::Result Collision::Hit(Point point, Triangle triangle)
 	};
 	DirectX::XMVECTOR vPoint = DirectX::XMLoadFloat3(&point.pos);
 
-	//  
+	//  三角形の頂点から別の頂点に向かうベクトルと、点に向かうベクトルを計算
 	DirectX::XMVECTOR vEdge[3];
 	DirectX::XMVECTOR vToPoint[3];
 	for (int i = 0; i < 3; ++i) {
-		//  
+		//  辺のベクトル
 		vEdge[i] = DirectX::XMVectorSubtract(vTriPoint[(i + 1) % 3], vTriPoint[i]);
 		vEdge[i] = DirectX::XMVector3Normalize(vEdge[i]);
-		//  
+		//  点に向かうベクトル
 		vToPoint[i] = DirectX::XMVectorSubtract(vPoint, vTriPoint[i]);
 		vToPoint[i] = DirectX::XMVector3Normalize(vToPoint[i]);
 	}
 
-	//  
+	//  三角形の法線を計算
 	DirectX::XMVECTOR vNormal;
 	vNormal = DirectX::XMVector3Cross(vEdge[0], vEdge[1]);
 	vNormal = DirectX::XMVector3Normalize(vNormal);
 
-	//  
+	//  点が三角形の面上に存在するか判定
 	float dot[3];
 	DirectX::XMStoreFloat(&dot[0], DirectX::XMVector3Dot(vNormal, vToPoint[0]));
-	if (fabsf(dot[0]) > FLT_EPSILON) { // FLT_EPSILON ≠ 0 0 float 
-		return out; //  
+	if (fabsf(dot[0]) > FLT_EPSILON) { // FLT_EPSILON ≠ 0（ほぼ、0、 float型の計算誤差の値） 
+		return out; //  面と法線の点に向かうベクトルが垂直になってなければ平面上に無い
 	}
 
-	//  
+	//  各ベクトルの外積を計算
 	DirectX::XMVECTOR vCross[3];
 	for (int i = 0; i < 3; ++i) {
 		vCross[i] = DirectX::XMVector3Cross(vEdge[i], vToPoint[i]);
 	}
 
-	//  
+	//  外積のベクトルと面のベクトルが同じ方向を向いているか計算
 	for (int i = 0; i < 3; ++i) {
 		DirectX::XMStoreFloat(&dot[i], DirectX::XMVector3Dot(vNormal, vCross[i]));
 	}
 
-	//  
+	//  当たり判定の結果を格納
 	if (dot[0] >= 0.0f &&
 		dot[1] >= 0.0f &&
 		dot[2] >= 0.0f) 
