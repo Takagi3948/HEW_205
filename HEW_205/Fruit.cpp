@@ -11,7 +11,6 @@ CFruit::CFruit()
 	, m_pCamera(nullptr)
 {
 	m_pModel = new Model();
-	m_pCamera = new CameraDebug();
 
 	if (!m_pModel->Load("Assets/Model/apple/apple.obj", 0.2f))
 	{
@@ -32,14 +31,16 @@ CFruit::~CFruit()
 void CFruit::Update()
 {
 	//èdóÕ
-	const float GRAVITY = 0.02f;
+	const float GRAVITY = 0.00f;
 
 	m_pos.y -= GRAVITY;
 
 }
 
-void CFruit::Draw()
+void CFruit::Draw(Camera* camera)
 {
+	m_pCamera = camera;
+
 	//ïœä∑çsóÒÇÃåvéZ
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);

@@ -26,7 +26,7 @@ public:
 	void Update();
 
 	//•`‰æˆ—
-	void Draw();
+	void Draw(Camera* camera);
 
 
 	//À•W‚Ìİ’è
