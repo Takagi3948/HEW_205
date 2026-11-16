@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Stand.h"
 #include "Fruit.h"
+#include "Enemy.h"
 
 
 class SceneGame : public Scene
@@ -29,6 +30,7 @@ private:
 	CPlayer* m_pPlayer;
 	CStand* m_pStand;
 	CFruit* m_pFruit;
+	CEnemy* m_pEnemy[MAX_ENEMY];
 
 	
 
