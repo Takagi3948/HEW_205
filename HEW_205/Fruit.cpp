@@ -1,20 +1,25 @@
-#include "Fruit.h"
+ï»¿#include "Fruit.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 #include"Defines.h"
-
+#include "Collision.h"
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
 	, radius(0.5f)
 	, m_pModel(nullptr)
 	, m_pCamera(nullptr)
+	, m_pStand(nullptr)
+	, m_pGround(nullptr)
 {
 	m_pModel = new Model();
+	m_pCamera = new CameraDebug();
+	m_pStand = new CStand();
+	m_pGround = new Ground();
 
 	if (!m_pModel->Load("Assets/Model/apple/apple.obj", 0.2f))
 	{
-		MessageBox(NULL, "ƒ‚ƒfƒ‹“Ç‚İ‚İ¸”s", "Load Error", MB_OK);
+		MessageBox(NULL, "ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ç‚İï¿½ï¿½İï¿½ï¿½s", "Load Error", MB_OK);
 	}
 
 }
@@ -30,18 +35,36 @@ CFruit::~CFruit()
 
 void CFruit::Update()
 {
-	//d—Í
-	const float GRAVITY = 0.00f;
+	//ï¿½dï¿½ï¿½
+	const float GRAVITY = 0.05f;
 
 	m_pos.y -= GRAVITY;
 
+	//ï¿½eï¿½lï¿½Ìæ“¾
+	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y+0.5f),m_pos.z} , radius/10};// ï¿½Êï¿½lï¿½ï¿½ï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½ï¿½Flyï¿½ï¿½ï¿½â‚ªï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Å•ÏXï¿½B(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+	Collision::Box GroundBox = m_pGround->GetBox();
+	//Collision::Box StandBox = m_pStand->GetBox();
+
+	//Collision::Result ResultStand = Collision::Result{ Collision::Hit(FruitSphere,StandBox) };
+	////ï¿½ï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Åï¿½ï¿½Wï¿½ï¿½3.0fï¿½É”ï¿½Î‚ï¿½ï¿½B
+	//if (ResultStand.isHit)
+	//{
+	//	m_pos.y = 3.0f;
+	//}
+
+	Collision::Result RsultGround = Collision::Result{Collision::Hit(FruitSphere,GroundBox)};
+	//ï¿½Oï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½hï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‰¼ï¿½ï¿½yï¿½ï¿½ï¿½Wï¿½ï¿½-9.0(ï¿½ï¿½ÊŠO)ï¿½É”ï¿½Î‚ï¿½ï¿½B
+	if (RsultGround.isHit)
+	{
+		m_pos.y = -9.0f;
+	}
 }
 
 void CFruit::Draw(Camera* camera)
 {
 	m_pCamera = camera;
 
-	//•ÏŠ·s—ñ‚ÌŒvZ
+	//ï¿½ÏŠï¿½ï¿½sï¿½ï¿½ÌŒvï¿½Z
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
 	DirectX::XMMATRIX Ry = DirectX::XMMatrixRotationY(0);
@@ -50,39 +73,39 @@ void CFruit::Draw(Camera* camera)
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
 	DirectX::XMMATRIX mat = S * R * T;
 
-	//•ÏŠ·s—ñ‚ğGPU‚É“n‚·‚½‚ß‚Ì‘Oˆ—
+	//ï¿½ÏŠï¿½ï¿½sï¿½ï¿½ï¿½GPUï¿½É“nï¿½ï¿½ï¿½ï¿½ï¿½ß‚Ì‘Oï¿½ï¿½ï¿½ï¿½
 	mat = DirectX::XMMatrixTranspose(mat);
 	DirectX::XMFLOAT4X4 fMat;
-	//mat‚ğfMat‚ÉŠi”[
+	//matï¿½ï¿½fMatï¿½ÉŠiï¿½[
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
-	//ƒ‚ƒfƒ‹
+	//ï¿½ï¿½ï¿½fï¿½ï¿½
 	if (m_pModel)
 	{
 
-		//ƒVƒF[ƒ_[‚É•K—v‚Èƒf[ƒ^‚ğİ’è
+		//ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½É•Kï¿½vï¿½Èƒfï¿½[ï¿½^ï¿½ï¿½İ’ï¿½
 		ShaderList::SetWorld(fMat);
 		ShaderList::SetView(m_pCamera->GetViewMatrix());
 		ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
 
-		// ƒ‚ƒfƒ‹‚Ég—p‚·‚éŠeíƒVƒF[ƒ_[‚ğİ’è 
+		// ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Égï¿½pï¿½ï¿½ï¿½ï¿½eï¿½ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½ï¿½İ’ï¿½
 		m_pModel->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
 		m_pModel->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
 
-		// ƒƒbƒVƒ…•Ê‚Éƒ‚ƒfƒ‹‚ğ•\¦ 
+		// ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½Ê‚Éƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½
 		for (int i = 0; i < m_pModel->GetMeshNum(); ++i) {
 
-			// ƒ‚ƒfƒ‹‚ÌƒƒbƒVƒ…‚ğæ“¾ 
+			// ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìƒï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½æ“¾
 			const Model::Mesh* mesh = m_pModel->GetMesh(i);
 
-			// ƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒ}ƒeƒŠƒAƒ‹‚ğæ“¾ 
+			// ï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ÉŠï¿½ï¿½è“–ï¿½Ä‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½æ“¾
 			Model::Material material = *m_pModel->GetMaterial(mesh->materialID);
 
 
-			// ƒVƒF[ƒ_[‚Öƒ}ƒeƒŠƒAƒ‹‚ğİ’è 
+			// ï¿½Vï¿½Fï¿½[ï¿½_ï¿½[ï¿½Öƒ}ï¿½eï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½İ’ï¿½
 			ShaderList::SetMaterial(material);
 
-			// ƒ‚ƒfƒ‹‚Ì•`‰æ(“à•”“I‚ÉˆêŠ‡‚Ås‚Á‚Ä‚¢‚½•`‰æˆ—‚ğAƒƒbƒVƒ…‚²‚Æ‚Ì•`‰æˆ—‚É•ÏX) 
+			// ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ì•`ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Iï¿½ÉˆêŠ‡ï¿½Åsï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½`ï¿½æˆï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Æ‚Ì•`ï¿½æˆï¿½ï¿½ï¿½É•ÏX)
 			m_pModel->Draw(i);
 		}
 

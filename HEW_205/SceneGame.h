@@ -6,9 +6,10 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Player.h"
+#include "PlayerManager.h"
 #include "Stand.h"
 #include "Fruit.h"
+#include "Enemy.h"
 
 
 class SceneGame : public Scene
@@ -26,9 +27,10 @@ private:
 	Goal* m_pGoal; //ゴールオブジェクト
 	Camera* m_pCamera; //継承元のカメラクラスのみ
 	Model* m_pModel;
-	CPlayer* m_pPlayer;
+	CPlayerManager* m_pPlayerManager;
 	CStand* m_pStand;
 	CFruit* m_pFruit;
+	CEnemy* m_pEnemy[MAX_ENEMY];
 
 	
 
