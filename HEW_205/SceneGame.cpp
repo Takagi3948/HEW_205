@@ -31,7 +31,6 @@ SceneGame::SceneGame()
 
 	m_pStand = new CStand();
 
-	m_pFruit = new CFruit();
 
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
@@ -41,8 +40,12 @@ SceneGame::SceneGame()
 	m_pEnemy[1]->SetPos(0.0f, 5.0f, 0.0f);
 	m_pEnemy[2]->SetPos(-7.0f, 4.0f, 0.0f);
 
-	//深度テストの有効化
-	SetDepthTest(DEPTH_ENABLE);
+	m_pFruit = new CFruit();
+	m_pFruit->SetCamera(m_pCamera);
+	m_pFruit->SetGround(m_pGround);
+	m_pFruit->SetStand(m_pStand);
+
+
 }
 
 SceneGame::~SceneGame()
@@ -114,8 +117,15 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	//深度テストの有効化
+	SetDepthTest(DEPTH_ENABLE);
+
+
 	Geometory::SetView(m_pCamera->GetViewMatrix());
 	Geometory::SetProjection(m_pCamera->GetProjectionMatrix());
+	ShaderList::SetView(m_pCamera->GetViewMatrix());
+	ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
+
 
 	//Geometory::DrawBox(); 
 	m_pGround->Draw();
@@ -123,7 +133,7 @@ void SceneGame::Draw()
 	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 
-	m_pFruit->Draw(m_pCamera);
+	m_pFruit->Draw();
 
 	m_pEnemy[0]->Draw();
 	m_pEnemy[1]->Draw();

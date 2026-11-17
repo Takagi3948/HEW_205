@@ -29,11 +29,25 @@ public:
 
 	//�`�揈��
 	//�J�����̎擾
-	void Draw(Camera*);
+	void Draw();
 
 
 	//���W�̐ݒ�
 	void SetPos(float x, float y, float z);
 
+	void SetCamera(Camera* pCamera)
+	{
+		m_pCamera = pCamera;
+	}
+
+	void SetStand(CStand* pStand)
+	{
+		m_pStand = pStand;
+	}
+
+	void SetGround(Ground* pGround)
+	{
+		m_pGround = pGround;
+	}
 
 };

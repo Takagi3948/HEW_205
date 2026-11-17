@@ -13,9 +13,6 @@ CFruit::CFruit()
 	, m_pGround(nullptr)
 {
 	m_pModel = new Model();
-	m_pCamera = new CameraDebug();
-	m_pStand = new CStand();
-	m_pGround = new Ground();
 
 	if (!m_pModel->Load("Assets/Model/apple/apple.obj", 0.2f))
 	{
@@ -26,6 +23,10 @@ CFruit::CFruit()
 
 CFruit::~CFruit()
 {
+	m_pCamera = nullptr;
+	m_pGround = nullptr;
+	m_pGround = nullptr;
+
 	if (m_pModel)
 	{
 		delete m_pModel;
@@ -60,10 +61,9 @@ void CFruit::Update()
 	}
 }
 
-void CFruit::Draw(Camera* camera)
+void CFruit::Draw()
 {
-	m_pCamera = camera;
-
+	
 	//変換行列の計算
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 	DirectX::XMMATRIX Rx = DirectX::XMMatrixRotationX(0);
