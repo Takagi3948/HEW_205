@@ -15,8 +15,6 @@ CPlayer::~CPlayer()
 
 void CPlayer::Update()
 {
-	//ƒWƒƒƒ“ƒv
-
 
 	//d—Íˆ—
 

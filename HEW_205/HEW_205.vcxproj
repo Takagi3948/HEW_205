@@ -182,14 +182,12 @@
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="LeftPlayer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MeshBuffer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
-    <ClInclude Include="RightPlayer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Shader.h" />
