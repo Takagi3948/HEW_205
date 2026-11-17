@@ -34,4 +34,7 @@ public:
 
 	//座標の取得(Size,Pos)
 	Collision::Box GetBox();
+
+	//角度の取得
+	float GetRad();
 };

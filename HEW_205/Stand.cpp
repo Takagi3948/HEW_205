@@ -72,5 +72,10 @@ void CStand::SetPos(DirectX::XMFLOAT4 Pos)
 
 Collision::Box CStand::GetBox()
 {
-	return Collision::Box{ m_pos,{3.0f,0.5f,0.6f} };
+	return Collision::Box{ {m_pos.x,m_pos.y+1.0f,m_pos.z} , {m_size.x,m_size.y,m_size.z} };
+}
+
+float CStand::GetRad()
+{
+	return angle;
 }

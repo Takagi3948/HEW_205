@@ -15,8 +15,9 @@ private:
 	float radius;	//���a
 	Model* m_pModel;
 	Camera* m_pCamera;
-	Ground* m_pGround;
 	CStand* m_pStand;
+	Ground* m_pGround;
+
 
 public:
 
