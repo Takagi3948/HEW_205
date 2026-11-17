@@ -1,4 +1,4 @@
-﻿
+﻿#pragma once
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
@@ -12,6 +12,7 @@
 class CFruit {
 private:
 	DirectX::XMFLOAT3 m_pos;		//���W
+	DirectX::XMFLOAT3 m_vel;
 	float radius;	//���a
 	Model* m_pModel;
 	Camera* m_pCamera;
@@ -35,5 +36,5 @@ public:
 	//���W�̐ݒ�
 	void SetPos(float x, float y, float z);
 
-
+	void SetStand(CStand* stand);
 };
