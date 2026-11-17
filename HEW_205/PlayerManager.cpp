@@ -125,7 +125,7 @@ void CPlayerManager::Update()
         }
     }
 
-    // À•W‚ð”½‰f
+    // À•W‚ð”½‰f.
     m_pLeftPlayer->SetPos(leftX, leftY, 0.0f);
     m_pRightPlayer->SetPos(rightX, rightY, 0.0f);
 
