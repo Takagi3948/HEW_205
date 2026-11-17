@@ -13,6 +13,8 @@ private:
 	DirectX::XMFLOAT3 m_size; //新規追加 サイズ。
 	DirectX::XMFLOAT3 m_move;//今フレームの台の移動量
 	bool m_isFirst;
+	DirectX::XMFLOAT3 m_prevPos;	//前フレームの台の位置
+	float m_prevAngle;				//前フレームの台の角度
 	//Collision::Info m_collision;
 
 public:
@@ -39,6 +41,10 @@ public:
 
 	//点が台の長さの範囲内か
 	bool IsWithinLength(const DirectX::XMFLOAT3& p) const;
+
+	//台から見て、物が表側から裏側へ横切ったか（台の動きと回転を含めて判定）
+	bool SweptHit(const DirectX::XMFLOAT3& prev, const DirectX::XMFLOAT3& cur,
+		float offset, DirectX::XMFLOAT3& outPoint, DirectX::XMFLOAT3& outNormal) const;
 
 	//今フレームの台の移動量
 	DirectX::XMFLOAT3 GetMove() const;

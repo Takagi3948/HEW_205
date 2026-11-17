@@ -61,23 +61,12 @@ void CFruit::Update()
 	//台との判定
 	if (m_pStand)
 	{
-		//台が動いた分だけ始点をずらし、台は止まった物だけ動いたとして判定する
-		DirectX::XMFLOAT3 mv = m_pStand->GetMove();
-		Collision::Line line = {
-			{ prev.x + mv.x, prev.y + mv.y, prev.z + mv.z },
-			cur
-		};
-
-		Collision::Plane plane = m_pStand->GetTopPlane(HIT_RADIUS);
-
-		Collision::Result r = Collision::Hit(plane, line);
-		if (r.isHit && m_pStand->IsWithinLength(r.point))
+		DirectX::XMFLOAT3 hitPos, n;
+		if (m_pStand->SweptHit(prev, cur, HIT_RADIUS, hitPos, n))
 		{
-			const DirectX::XMFLOAT3 n = plane.normal;//台のY軸
-
 			//平面の上に置きなおして、入射角に関係なく台のY軸方向へ固定速度で飛ばす
-			m_pos.x = r.point.x + n.x * PUSH_OUT;
-			m_pos.y = r.point.y + n.y * PUSH_OUT - HIT_OFFSET_Y;
+			m_pos.x = hitPos.x + n.x * PUSH_OUT;
+			m_pos.y = hitPos.y + n.y * PUSH_OUT - HIT_OFFSET_Y;
 			m_vel.x = n.x * BOUNCE_SPEED;
 			m_vel.y = n.y * BOUNCE_SPEED;
 		}
