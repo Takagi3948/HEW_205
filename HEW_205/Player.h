@@ -2,14 +2,23 @@
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
+#include "Collision.h"
 
 class CPlayer {
 private:
 	float m_pos[3];		//À•W
+	Collision::Info m_collision; //  “–‚½‚è”»’è‚Ìî•ñ
+	float m_speedY;
+	bool  m_isGround;
 
 public:
 	CPlayer();
 	~CPlayer();
+
+	Collision::Info GetCollision() {
+		return m_collision;
+	}
+	virtual void OnCollision(Collision::Result collision);
 
 	//XVˆ—
 	void Update();

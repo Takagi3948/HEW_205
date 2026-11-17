@@ -102,6 +102,18 @@ void SceneGame::Update()
 	
 	m_pPlayerManager->Update();
 
+	//Player‚ÆGround‚Ì“–‚½‚è”»’è
+	Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), m_pGround->GetCollision());
+	//”»’è
+	if (Rightresult.isHit)
+		m_pPlayerManager->RightOnCollision(Rightresult);
+
+	Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), m_pGround->GetCollision());
+	//”»’è
+	if (Leftresult.isHit)
+		m_pPlayerManager->LeftOnCollision(Leftresult);
+
+
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
 
