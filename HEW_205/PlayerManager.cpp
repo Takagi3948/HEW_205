@@ -51,7 +51,7 @@ void CPlayerManager::Update()
 	const float PLAYERGRAVITY = 0.012f;
 
 	// ジャンプ力
-	const float JUMP_POWER = 0.25f;
+	const float JUMP_POWER = 0.125f;
 
 	// 左プレイヤー移動
 	if (IsKeyPress('A'))
