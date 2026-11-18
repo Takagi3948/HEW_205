@@ -10,8 +10,12 @@ CPlayerManager::CPlayerManager()
 	, Position{ 0.0f,0.0f,0.0f,0.0f }
 	, R_Pos{ 1.0f,0.5f,0.0f }
 	, L_Pos{ -1.0f,0.5f,0.0f }
+	, rightVelocityY(0.0f)
+	, leftVelocityY(0.0f)
 	, rightJump(false)
 	, leftJump(false)
+	, L_isGround(true)
+	, R_isGround(true)
 {
 	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, L_Pos.z);
 	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, R_Pos.z);
@@ -39,19 +43,15 @@ void CPlayerManager::Update()
 	m_pLeftPlayer->SetLineStart(L_Pos);
 	m_pRightPlayer->SetLineStart(R_Pos);
 
-	// ジャンプ用
-	static float leftVelocityY = 1.0f;
-	static float rightVelocityY = 0.0f;
-
 
 	// 移動速度
 	const float MOVE_SPEED = 0.025f;
 
 	// 重力
-	const float GRAVITY = 0.012f;
+	const float PLAYERGRAVITY = 0.012f;
 
 	// ジャンプ力
-	const float JUMP_POWER = 0.125f;
+	const float JUMP_POWER = 0.25f;
 
 	// 左プレイヤー移動
 	if (IsKeyPress('A'))
@@ -83,6 +83,7 @@ void CPlayerManager::Update()
 	{
 		leftVelocityY = JUMP_POWER;
 		leftJump = true;
+		L_isGround = true;
 	}
 
 	// 右プレイヤージャンプ
@@ -90,30 +91,29 @@ void CPlayerManager::Update()
 	{
 		rightVelocityY = JUMP_POWER;
 		rightJump = true;
+		R_isGround = true;
 	}
 
-	L_Pos.y -= GRAVITY;
-	R_Pos.y -= GRAVITY;
+	//地面にいなければ重力の処理
+	if(!L_isGround)
+		L_Pos.y -= PLAYERGRAVITY;
+
+	if(!R_isGround)
+		R_Pos.y -= PLAYERGRAVITY;
+
 
 	// 左ジャンプ更新
 	if (leftJump)
 	{
 		L_Pos.y += leftVelocityY;
-
-
-		L_Pos.y = 0.5f;
-		leftVelocityY = 0.0f;
-		//leftJump = false;
+		leftVelocityY -= PLAYERGRAVITY;
 	}
 
 	// 右ジャンプ更新
 	if (rightJump)
 	{
 		R_Pos.y += rightVelocityY;
-
-		R_Pos.y = 0.5f;
-		rightVelocityY = 0.0f;
-		//rightJump = false;
+		rightVelocityY -= PLAYERGRAVITY;
 	}
 
 	// 座標を反映
@@ -156,16 +156,32 @@ Collision::Info CPlayerManager::LeftGetCollision()
 
 void CPlayerManager::RightOnCollision(Collision::Result collision)
 {
-	rightJump = false;
-	R_Pos.y = collision.point.y + 0.5f;
-	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
+	if (rightVelocityY  < 0.0f) //まだジャンプしてたら行わない
+	{
+		rightJump = false;
+		rightVelocityY = 0.0f;
+
+		R_Pos.y = collision.point.y + 0.5f;
+		m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
+
+		R_isGround = true;
+	}
+	
 }
 
 void CPlayerManager::LeftOnCollision(Collision::Result collision)
 {
-	leftJump = false;
-	L_Pos.y = collision.point.y + 0.5f;
-	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
+	if (leftVelocityY < 0.0f) //まだジャンプしてたら行わない
+	{
+		leftJump = false;
+		leftVelocityY = 0.0f;
+
+		L_Pos.y = collision.point.y + 0.5f;
+		m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
+
+		L_isGround = true;
+	}
+	
 }
 
 

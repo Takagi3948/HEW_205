@@ -23,15 +23,10 @@ void CPlayer::Update()
 {
 
 	//“–‚½‚è”»’è‚ÌXV
-	m_collision.line.start = {
-		m_pos[0],
-		m_pos[1],
-		m_pos[2]
-	};
 
 	m_collision.line.end = {
 		m_pos[0],
-		m_pos[1]-0.5f,
+		m_pos[1] - 1.0f,
 		m_pos[2]
 	};
 

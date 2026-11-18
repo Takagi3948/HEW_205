@@ -9,8 +9,8 @@ Collision::Result Collision::Hit(Info a, Info b)
 		case eSphere: out = Hit(a.sphere, b.sphere); break;
 		}
 	}
-	else
-		out = Hit(a.sphere, b.box);
+	else if (a.type == eLine && b.type == ePlane)
+		out = Hit(b.plane, a.line);
 
 	return out;
 }

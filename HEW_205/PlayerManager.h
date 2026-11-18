@@ -11,8 +11,12 @@ private:
 	DirectX::XMFLOAT4 Position;
 	DirectX::XMFLOAT3 R_Pos;
 	DirectX::XMFLOAT3 L_Pos;
+	float leftVelocityY;		//ジャンプ用
+	float rightVelocityY;		//ジャンプ用
 	bool leftJump;
 	bool rightJump;
+	bool L_isGround;
+	bool R_isGround;
 
 public:
 	CPlayerManager();
