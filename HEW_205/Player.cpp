@@ -18,11 +18,6 @@ CPlayer::~CPlayer()
 {
 }
 
-void CPlayer::OnCollision(Collision::Result collision)
-{
-	// 地面との交点にPlayerの足元を合わせる
-	m_pos[1] = collision.point.y + 0.5f;
-}
 
 void CPlayer::Update()
 {
@@ -30,13 +25,13 @@ void CPlayer::Update()
 	//当たり判定の更新
 	m_collision.line.start = {
 		m_pos[0],
-		m_pos[1] - 0.5f,
+		m_pos[1],
 		m_pos[2]
 	};
 
 	m_collision.line.end = {
 		m_pos[0],
-		m_pos[1] - 1.0f,
+		m_pos[1]-0.5f,
 		m_pos[2]
 	};
 
@@ -77,4 +72,9 @@ DirectX::XMFLOAT2 CPlayer::GetPos()
 {
 	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
 	return Pos;
+}
+
+void CPlayer::SetLineStart(DirectX::XMFLOAT3 Pos)
+{
+	m_collision.line.start = Pos;
 }

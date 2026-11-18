@@ -18,7 +18,6 @@ public:
 	Collision::Info GetCollision() {
 		return m_collision;
 	}
-	virtual void OnCollision(Collision::Result collision);
 
 	//XVˆ—
 	void Update();
@@ -30,6 +29,8 @@ public:
 	//À•W‚Ìİ’è
 	void SetPos(float x, float y, float z);
 	DirectX::XMFLOAT2 GetPos();
+
+	void SetLineStart(DirectX::XMFLOAT3 Pos);
 
 
 

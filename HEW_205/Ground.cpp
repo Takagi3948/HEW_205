@@ -5,7 +5,7 @@
 Ground::Ground()
 	:m_pos{0.0f,0.0f,0.0f}
 	,m_scale{1.0f,1.0f,1.0f}
-    ,m_angle(DirectX::XMConvertToRadians(0.0f))
+    ,m_angle(0.0f)
     ,m_triangle()
     ,m_collision()
 {
@@ -26,6 +26,7 @@ void Ground::Update()
     m_pos[2]
     };
 
+    
     m_collision.plane.normal = {
         -sinf(m_angle),
         cosf(m_angle),
@@ -79,8 +80,9 @@ void Ground::Draw()
 {
 	//変換行列の計算
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos[0], m_pos[1], m_pos[2]);
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_scale[0], m_scale[1], m_scale[2]);
-	DirectX::XMMATRIX mat = S * T;
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_scale[0], m_scale[1], m_scale[2]);
+    DirectX::XMMATRIX R = DirectX::XMMatrixRotationZ(m_angle);
+	DirectX::XMMATRIX mat = S * R * T;
 
 	//変換行列をGPUに渡すための前処理
 	mat = DirectX::XMMatrixTranspose(mat);

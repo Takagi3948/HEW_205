@@ -106,13 +106,43 @@ void SceneGame::Update()
 	Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), m_pGround->GetCollision());
 	//判定
 	if (Rightresult.isHit)
-		m_pPlayerManager->RightOnCollision(Rightresult);
+	{
+		//  点の情報
+		Collision::Point point;
+		point.pos = Rightresult.point; //  平面と線分の交点を設定
+		//---  斜面の情報（四角形ではなく、三角形に分割）
+		Collision::Triangle* triangle = m_pGround->GetTriangle();
+		
+
+		for (int i = 0; i < 2; ++i) {
+			Rightresult = Collision::Hit(point, triangle[i]);
+			if (Rightresult.isHit) {
+				m_pPlayerManager->RightOnCollision(Rightresult);
+				break;
+			}
+		}
+	}
+		
 
 	Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), m_pGround->GetCollision());
 	//判定
 	if (Leftresult.isHit)
-		m_pPlayerManager->LeftOnCollision(Leftresult);
+	{
+		//  点の情報
+		Collision::Point point;
+		point.pos = Leftresult.point; //  平面と線分の交点を設定
+		//---  斜面の情報（四角形ではなく、三角形に分割）
+		Collision::Triangle* triangle = m_pGround->GetTriangle();
 
+
+		for (int i = 0; i < 2; ++i) {
+			Leftresult = Collision::Hit(point, triangle[i]);
+			if (Leftresult.isHit) {
+				m_pPlayerManager->LeftOnCollision(Leftresult);
+				break;
+			}
+		}
+	}
 
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
