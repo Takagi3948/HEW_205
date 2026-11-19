@@ -1,21 +1,41 @@
 #include "Goal.h"
+#include "Fruit.h"
 #include "Geometory.h"
 #include <DirectXMath.h>
 #include"Defines.h"
 
 Goal::Goal()
 	:m_pos{ 0.0f,0.0f,0.0f }
-	, m_time(0)
+	, m_time(0)	
 {
+	m_box.center = DirectX::XMFLOAT3(m_pos[0], m_pos[1], m_pos[2]);
+	m_box.size = DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f);
 }
 
 Goal::~Goal()
 {
 }
 
-void Goal::Update()
+void Goal::Update(CFruit* fruit)
 {
 	m_time += 1.0f / FPS;
+
+	// ゴールの当たり判定情報
+	m_box.center = DirectX::XMFLOAT3(m_pos[0], m_pos[1], m_pos[2]);
+
+	// フルーツの当たり判定情報
+	Collision::Sphere sphere;
+
+	//sphere.center = fruit->GetPos();
+	//sphere.radius = fruit->GetRadius();
+
+	// 球と四角の当たり判定
+	Collision::Result result = Collision::Hit(sphere, m_box);
+
+	if (result.isHit)
+	{
+		OutputDebugString("GOAL!\n");
+	}
 }
 
 void Goal::Draw()
@@ -47,5 +67,7 @@ void Goal::SetPos(float x, float y, float z)
 	m_pos[0] = x;
 	m_pos[1] = y;
 	m_pos[2] = z;
+
+	m_box.center = DirectX::XMFLOAT3(x, y, z);
 }
 

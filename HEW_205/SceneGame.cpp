@@ -95,7 +95,7 @@ SceneGame::~SceneGame()
 void SceneGame::Update()
 {
 	m_pGround->Update();
-	m_pGoal->Update();
+	//m_pGoal->Update(m_pFruit);
 	
 	m_pPlayerManager->Update();
 
