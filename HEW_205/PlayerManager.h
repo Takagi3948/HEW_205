@@ -17,7 +17,7 @@ private:
 	bool rightJump;
 	bool L_isGround;
 	bool R_isGround;
-
+	
 public:
 	CPlayerManager();
 	~CPlayerManager();

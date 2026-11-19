@@ -40,8 +40,8 @@ CPlayerManager::~CPlayerManager()
 void CPlayerManager::Update()
 {
 	//移動前の座標をセット
-	m_pLeftPlayer->SetLineStart(L_Pos);
-	m_pRightPlayer->SetLineStart(R_Pos);
+	//m_pLeftPlayer->SetLineStart(L_Pos);
+	//m_pRightPlayer->SetLineStart(R_Pos);
 
 	// 移動速度
 	const float MOVE_SPEED = 0.025f;
@@ -188,6 +188,7 @@ void CPlayerManager::Reset()
 	L_isGround = false;
 	R_isGround = false;
 }
+
 
 
 

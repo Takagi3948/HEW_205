@@ -21,6 +21,12 @@ CPlayer::~CPlayer()
 
 void CPlayer::Update()
 {
+	// Lineの始点：Playerの現在位置
+	m_collision.line.start = {
+		m_pos[0],
+		m_pos[1],
+		m_pos[2]
+	};
 
 	//当たり判定の更新
 	//ちょっと伸ばすことで平面との交点を計算しやすくする
