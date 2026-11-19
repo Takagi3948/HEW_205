@@ -14,8 +14,8 @@ CPlayerManager::CPlayerManager()
 	, leftVelocityY(0.0f)
 	, rightJump(false)
 	, leftJump(false)
-	, L_isGround(true)
-	, R_isGround(true)
+	, L_isGround(false)
+	, R_isGround(false)
 {
 	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, L_Pos.z);
 	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, R_Pos.z);
@@ -43,9 +43,6 @@ void CPlayerManager::Update()
 	m_pLeftPlayer->SetLineStart(L_Pos);
 	m_pRightPlayer->SetLineStart(R_Pos);
 
-	R_isGround = false;
-	L_isGround = false;
-
 	// 移動速度
 	const float MOVE_SPEED = 0.025f;
 
@@ -54,7 +51,7 @@ void CPlayerManager::Update()
 	const float JUMPGRAVITY = 0.024f;
 
 	// ジャンプ力
-	const float JUMP_POWER = 0.125f;
+	const float JUMP_POWER = 0.25f;
 
 	// 左プレイヤー移動
 	if (IsKeyPress('A'))
@@ -80,31 +77,36 @@ void CPlayerManager::Update()
 		R_Pos.x += MOVE_SPEED;
 	}
 
-
+	//地面にいるときだけジャンプ
 	// 左プレイヤージャンプ
-	if (IsKeyTrigger('W') && !leftJump)
+	if (IsKeyTrigger('W') && !leftJump && L_isGround)
 	{
 		leftVelocityY = JUMP_POWER;
 		leftJump = true;
-		L_isGround = true;
+		L_isGround = false;
 	}
 
 	// 右プレイヤージャンプ
-	if (IsKeyTrigger(VK_UP) && !rightJump)
+	if (IsKeyTrigger(VK_UP) && !rightJump && R_isGround)
 	{
 		rightVelocityY = JUMP_POWER;
 		rightJump = true;
-		R_isGround = true;
+		R_isGround = false;
 	}
 
 	//地面にいないかつジャンプしていなければ重力の処理
 	if (!L_isGround && !leftJump)
-		L_Pos.y -= PLAYERGRAVITY;
-
+	{
+		L_Pos.y -= leftVelocityY;
+		leftVelocityY += PLAYERGRAVITY;
+	}
+		
 	if (!R_isGround && !rightJump)
-		R_Pos.y -= PLAYERGRAVITY;
-
-
+	{
+		R_Pos.y -= rightVelocityY;
+		rightVelocityY += PLAYERGRAVITY;
+	}
+		
 	// 左ジャンプ更新
 	if (leftJump)
 	{
@@ -126,7 +128,9 @@ void CPlayerManager::Update()
 	m_pLeftPlayer->Update();
 	m_pRightPlayer->Update();
 
-
+	//地面にいるかどうか判定の初期化
+	R_isGround = false;
+	L_isGround = false;
 }
 
 void CPlayerManager::Draw()
