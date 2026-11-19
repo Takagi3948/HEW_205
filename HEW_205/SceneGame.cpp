@@ -101,6 +101,8 @@ void SceneGame::Update()
 	m_pGoal->Update();
 	
 	m_pPlayerManager->Update();
+	m_pPlayerManager->Reset();
+
 
 	//Player‚ÆGround‚Ì“–‚½‚è”»’è
 	Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), m_pGround->GetCollision());
@@ -120,17 +122,9 @@ void SceneGame::Update()
 				m_pPlayerManager->RightOnCollision(Rightresult);
 				break;
 			}
-			/*
-			else
-			{
-				m_pPlayerManager->RightIsNotGround();
-				break;
-			}
-			*/
 		}
 	}
-		
-
+	
 	Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), m_pGround->GetCollision());
 	//”»’è
 	if (Leftresult.isHit)
@@ -142,21 +136,17 @@ void SceneGame::Update()
 		Collision::Triangle* triangle = m_pGround->GetTriangle();
 
 
+		//’n–Ê‚É“–‚½‚Á‚Ä‚é‚©”»’è‚ðŽæ‚é
 		for (int i = 0; i < 2; ++i) {
 			Leftresult = Collision::Hit(point, triangle[i]);
 			if (Leftresult.isHit) {
 				m_pPlayerManager->LeftOnCollision(Leftresult);
 				break;
 			}
-			/*
-			else
-			{
-				m_pPlayerManager->LeftIsNotGround();
-				break;
-			}
-			*/
+			
 		}
 	}
+	
 
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();

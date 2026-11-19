@@ -129,8 +129,8 @@ void CPlayerManager::Update()
 	m_pRightPlayer->Update();
 
 	//’n–Ê‚É‚¢‚é‚©‚Ç‚¤‚©”»’è‚Ì‰Šú‰»
-	R_isGround = false;
-	L_isGround = false;
+	//R_isGround = false;
+	//L_isGround = false;
 }
 
 void CPlayerManager::Draw()
@@ -182,6 +182,13 @@ void CPlayerManager::LeftOnCollision(Collision::Result collision)
 
 	L_isGround = true;
 }
+
+void CPlayerManager::Reset()
+{
+	L_isGround = false;
+	R_isGround = false;
+}
+
 
 
 

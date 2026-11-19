@@ -5,7 +5,7 @@
 Ground::Ground()
 	:m_pos{0.0f,0.0f,0.0f}
 	,m_scale{1.0f,1.0f,1.0f}
-    ,m_angle(10.0f)
+    ,m_angle(0.0f)
     ,m_triangle()
     ,m_collision()
 {

@@ -23,10 +23,10 @@ void CPlayer::Update()
 {
 
 	//当たり判定の更新
-
+	//ちょっと伸ばすことで平面との交点を計算しやすくする
 	m_collision.line.end = {
 		m_pos[0],
-		m_pos[1] - 0.5f,
+		m_pos[1] - 0.55f,
 		m_pos[2]
 	};
 
