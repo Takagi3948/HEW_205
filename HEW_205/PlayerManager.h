@@ -35,6 +35,4 @@ public:
 
 	void RightOnCollision(Collision::Result collision);
 	void LeftOnCollision(Collision::Result collision);
-
-
 };

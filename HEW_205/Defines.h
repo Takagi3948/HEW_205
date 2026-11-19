@@ -17,7 +17,7 @@ static const float fFPS = static_cast<float>(FPS);
 #define METER(value) (value * 1.0f)
 #define MSEC(value) (value / fFPS)
 #define CMSEC(value) MSEC(CMETER(value))
-static const float GRAVITY = 0.98f;
+static const float GRAVITY = 0.012f;
 
 // ƒ^ƒCƒgƒ‹
 static const char* APP_TITLE = "HEW_205";

@@ -120,6 +120,13 @@ void SceneGame::Update()
 				m_pPlayerManager->RightOnCollision(Rightresult);
 				break;
 			}
+			/*
+			else
+			{
+				m_pPlayerManager->RightIsNotGround();
+				break;
+			}
+			*/
 		}
 	}
 		
@@ -141,6 +148,13 @@ void SceneGame::Update()
 				m_pPlayerManager->LeftOnCollision(Leftresult);
 				break;
 			}
+			/*
+			else
+			{
+				m_pPlayerManager->LeftIsNotGround();
+				break;
+			}
+			*/
 		}
 	}
 

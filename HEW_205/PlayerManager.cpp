@@ -43,12 +43,15 @@ void CPlayerManager::Update()
 	m_pLeftPlayer->SetLineStart(L_Pos);
 	m_pRightPlayer->SetLineStart(R_Pos);
 
+	R_isGround = false;
+	L_isGround = false;
 
 	// 移動速度
 	const float MOVE_SPEED = 0.025f;
 
 	// 重力
 	const float PLAYERGRAVITY = 0.012f;
+	const float JUMPGRAVITY = 0.024f;
 
 	// ジャンプ力
 	const float JUMP_POWER = 0.125f;
@@ -94,11 +97,11 @@ void CPlayerManager::Update()
 		R_isGround = true;
 	}
 
-	//地面にいなければ重力の処理
-	if(!L_isGround)
+	//地面にいないかつジャンプしていなければ重力の処理
+	if (!L_isGround && !leftJump)
 		L_Pos.y -= PLAYERGRAVITY;
 
-	if(!R_isGround)
+	if (!R_isGround && !rightJump)
 		R_Pos.y -= PLAYERGRAVITY;
 
 
@@ -106,14 +109,14 @@ void CPlayerManager::Update()
 	if (leftJump)
 	{
 		L_Pos.y += leftVelocityY;
-		leftVelocityY -= PLAYERGRAVITY;
+		leftVelocityY -= JUMPGRAVITY;
 	}
 
 	// 右ジャンプ更新
 	if (rightJump)
 	{
 		R_Pos.y += rightVelocityY;
-		rightVelocityY -= PLAYERGRAVITY;
+		rightVelocityY -= JUMPGRAVITY;
 	}
 
 	// 座標を反映
@@ -156,32 +159,24 @@ Collision::Info CPlayerManager::LeftGetCollision()
 
 void CPlayerManager::RightOnCollision(Collision::Result collision)
 {
-	if (rightVelocityY  < 0.0f) //まだジャンプしてたら行わない
-	{
-		rightJump = false;
-		rightVelocityY = 0.0f;
+	rightJump = false;
+	rightVelocityY = 0.0f;
 
-		R_Pos.y = collision.point.y + 0.5f;
-		m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
+	R_Pos.y = collision.point.y + 0.5f;
+	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
 
-		R_isGround = true;
-	}
-	
+	R_isGround = true;
 }
 
 void CPlayerManager::LeftOnCollision(Collision::Result collision)
 {
-	if (leftVelocityY < 0.0f) //まだジャンプしてたら行わない
-	{
-		leftJump = false;
-		leftVelocityY = 0.0f;
+	leftJump = false;
+	leftVelocityY = 0.0f;
 
-		L_Pos.y = collision.point.y + 0.5f;
-		m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
+	L_Pos.y = collision.point.y + 0.5f;
+	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
 
-		L_isGround = true;
-	}
-	
+	L_isGround = true;
 }
 
 
