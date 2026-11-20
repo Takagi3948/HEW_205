@@ -6,21 +6,35 @@
 
 CPlayer::CPlayer()
 	:m_pos{ 0.0f,0.0f,0.0f }
+	,m_speedY(0.012f)
+	,m_isGround(false)
+	,m_collision()
 {
+	// 当たり判定の種類を線分にする
+	m_collision.type = Collision::eLine;
 }
 
 CPlayer::~CPlayer()
 {
 }
 
+
 void CPlayer::Update()
 {
-	//ジャンプ
+	// Lineの始点：Playerの現在位置
+	m_collision.line.start = {
+		m_pos[0],
+		m_pos[1],
+		m_pos[2]
+	};
 
-
-	//重力処理
-
-	//当たり判定
+	//当たり判定の更新
+	//ちょっと伸ばすことで平面との交点を計算しやすくする
+	m_collision.line.end = {
+		m_pos[0],
+		m_pos[1] - 0.55f,
+		m_pos[2]
+	};
 
 }
 
@@ -59,4 +73,9 @@ DirectX::XMFLOAT2 CPlayer::GetPos()
 {
 	DirectX::XMFLOAT2 Pos = { m_pos[0],m_pos[1] };
 	return Pos;
+}
+
+void CPlayer::SetLineStart(DirectX::XMFLOAT3 Pos)
+{
+	m_collision.line.start = Pos;
 }

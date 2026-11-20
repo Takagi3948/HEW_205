@@ -29,11 +29,25 @@ public:
 	void Update();
 
 	//描画処理
-	void Draw(Camera*);
+	void Draw();
 
 
 	//座標の設定
 	void SetPos(float x, float y, float z);
 
-	void SetStand(CStand* stand);
+	void SetCamera(Camera* pCamera)
+	{
+		m_pCamera = pCamera;
+	}
+
+	void SetStand(CStand* pStand)
+	{
+		m_pStand = pStand;
+	}
+
+	void SetGround(Ground* pGround)
+	{
+		m_pGround = pGround;
+	}
+
 };

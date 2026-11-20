@@ -17,10 +17,10 @@ static const float fFPS = static_cast<float>(FPS);
 #define METER(value) (value * 1.0f)
 #define MSEC(value) (value / fFPS)
 #define CMSEC(value) MSEC(CMETER(value))
-static const float GRAVITY = 0.98f;
+static const float GRAVITY = 0.012f;
 
 // タイトル
-static const char* APP_TITLE = "DX22_Golf";
+static const char* APP_TITLE = "HEW_205";
 
 // 画面サイズ
 static const int SCREEN_WIDTH	= 1280;

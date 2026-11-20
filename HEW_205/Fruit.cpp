@@ -24,9 +24,6 @@ CFruit::CFruit()
 	, m_pGround(nullptr)
 {
 	m_pModel = new Model();
-	m_pCamera = new CameraDebug();
-	//m_pStand = new CStand();
-	m_pGround = new Ground();
 
 	if (!m_pModel->Load("Assets/Model/apple/apple.obj", 0.2f))
 	{
@@ -37,6 +34,10 @@ CFruit::CFruit()
 
 CFruit::~CFruit()
 {
+	m_pCamera = nullptr;
+	m_pGround = nullptr;
+	m_pGround = nullptr;
+
 	if (m_pModel)
 	{
 		delete m_pModel;
@@ -78,7 +79,7 @@ void CFruit::Update()
 	//m_pos.y -= GRAVITY;
 
 	//各値の取得
-	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y+0.5f),m_pos.z} , radius/10};// 通常値だと当たる前にFlyしやがったので変更。(無理やり)
+	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y + 0.5f),m_pos.z} , radius / 10 };// 通常値だと当たる前にFlyしやがったので変更。(無理やり)
 	Collision::Box GroundBox = m_pGround->GetBox();
 	//Collision::Box StandBox = m_pStand->GetBox();
 
@@ -89,7 +90,7 @@ void CFruit::Update()
 	//	m_pos.y = 3.0f;
 	//}
 
-	Collision::Result RsultGround = Collision::Result{Collision::Hit(FruitSphere,GroundBox)};
+	Collision::Result RsultGround = Collision::Result{ Collision::Hit(FruitSphere,GroundBox) };
 	//グラウンドと当たったら仮でy座標を-9.0(画面外)に飛ばす。
 	if (RsultGround.isHit)
 	{
@@ -97,9 +98,8 @@ void CFruit::Update()
 	}
 }
 
-void CFruit::Draw(Camera* camera)
+void CFruit::Draw()
 {
-	m_pCamera = camera;
 
 	//変換行列の計算
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
@@ -116,37 +116,34 @@ void CFruit::Draw(Camera* camera)
 	//matをfMatに格納
 	DirectX::XMStoreFloat4x4(&fMat, mat);
 
+
 	//モデル
-	if (m_pModel)
-	{
 
 		//シェーダーに必要なデータを設定
-		ShaderList::SetWorld(fMat);
-		ShaderList::SetView(m_pCamera->GetViewMatrix());
-		ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
+	ShaderList::SetWorld(fMat);
 
-		// モデルに使用する各種シェーダーを設定
-		m_pModel->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
-		m_pModel->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
+	// モデルに使用する各種シェーダーを設定
+	m_pModel->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
+	m_pModel->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
 
-		// メッシュ別にモデルを表示
-		for (int i = 0; i < m_pModel->GetMeshNum(); ++i) {
+	// メッシュ別にモデルを表示
+	for (int i = 0; i < m_pModel->GetMeshNum(); ++i) {
 
-			// モデルのメッシュを取得
-			const Model::Mesh* mesh = m_pModel->GetMesh(i);
+		// モデルのメッシュを取得
+		const Model::Mesh* mesh = m_pModel->GetMesh(i);
 
-			// メッシュに割り当てられているマテリアルを取得
-			Model::Material material = *m_pModel->GetMaterial(mesh->materialID);
+		// メッシュに割り当てられているマテリアルを取得
+		Model::Material material = *m_pModel->GetMaterial(mesh->materialID);
 
 
-			// シェーダーへマテリアルを設定
-			ShaderList::SetMaterial(material);
+		// シェーダーへマテリアルを設定
+		ShaderList::SetMaterial(material);
 
-			// モデルの描画(内部的に一括で行っていた描画処理を、メッシュごとの描画処理に変更)
-			m_pModel->Draw(i);
-		}
-
+		// モデルの描画(内部的に一括で行っていた描画処理を、メッシュごとの描画処理に変更)
+		m_pModel->Draw(i);
 	}
+
+
 
 
 
@@ -159,8 +156,4 @@ void CFruit::SetPos(float x, float y, float z)
 	m_pos.z = z;
 }
 
-void CFruit::SetStand(CStand* stand)
-{
-	m_pStand = stand;
-}
 

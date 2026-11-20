@@ -8,6 +8,9 @@ class Ground {
 private:
 	float m_pos[3];		//座標
 	float m_scale[3];	//拡大率
+	float m_angle;	//角度
+	Collision::Info m_collision;		//当たり判定の情報
+	Collision::Triangle m_triangle[2]; //三角形の情報
 
 public:
 	Ground();
@@ -28,4 +31,12 @@ public:
 
 	// Box型を渡す処理(Pos,Scale)
 	Collision::Box GetBox();
+
+	// 三角形2つを取得
+	Collision::Triangle* GetTriangle();
+
+	Collision::Info GetCollision() {
+		return m_collision;
+	}
+
 };
