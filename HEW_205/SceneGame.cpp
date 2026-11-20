@@ -32,6 +32,7 @@ SceneGame::SceneGame()
 	m_pStand = new CStand();
 
 
+	m_pFruit->SetStand(m_pStand);
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
 		m_pEnemy[i] = new CEnemy;

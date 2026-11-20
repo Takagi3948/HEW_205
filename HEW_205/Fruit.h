@@ -1,4 +1,4 @@
-﻿
+﻿#pragma once
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
@@ -11,8 +11,9 @@
 
 class CFruit {
 private:
-	DirectX::XMFLOAT3 m_pos;		//���W
-	float radius;	//���a
+	DirectX::XMFLOAT3 m_pos;		//座標
+	DirectX::XMFLOAT3 m_vel;
+	float radius;	//半径
 	Model* m_pModel;
 	Camera* m_pCamera;
 	Ground* m_pGround;
@@ -24,15 +25,14 @@ public:
 	CFruit();
 	~CFruit();
 
-	//�X�V����
+	//更新処理
 	void Update();
 
-	//�`�揈��
-	//�J�����̎擾
+	//描画処理
 	void Draw();
 
 
-	//���W�̐ݒ�
+	//座標の設定
 	void SetPos(float x, float y, float z);
 
 	void SetCamera(Camera* pCamera)
