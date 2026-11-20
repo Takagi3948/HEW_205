@@ -9,8 +9,8 @@ Collision::Result Collision::Hit(Info a, Info b)
 		case eSphere: out = Hit(a.sphere, b.sphere); break;
 		}
 	}
-	else
-		out = Hit(a.sphere, b.box);
+	else if (a.type == eLine && b.type == ePlane)
+		out = Hit(b.plane, a.line);
 
 	return out;
 }
@@ -213,7 +213,7 @@ Collision::Result Collision::Hit(Point point, Triangle triangle)
 	//  点が三角形の面上に存在するか判定
 	float dot[3];
 	DirectX::XMStoreFloat(&dot[0], DirectX::XMVector3Dot(vNormal, vToPoint[0]));
-	if (fabsf(dot[0]) > FLT_EPSILON) { // FLT_EPSILON ≠ 0（ほぼ、0、 float型の計算誤差の値） 
+	if (fabsf(dot[0]) > 0.001f) { // FLT_EPSILON ≠ 0（ほぼ、0、 float型の計算誤差の値） 
 		return out; //  面と法線の点に向かうベクトルが垂直になってなければ平面上に無い
 	}
 
