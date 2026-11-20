@@ -36,7 +36,6 @@ CFruit::~CFruit()
 {
 	m_pCamera = nullptr;
 	m_pGround = nullptr;
-	m_pGround = nullptr;
 
 	if (m_pModel)
 	{
