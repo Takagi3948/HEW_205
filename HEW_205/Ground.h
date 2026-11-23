@@ -9,11 +9,12 @@ private:
 	float m_pos[3];		//座標
 	float m_scale[3];	//拡大率
 	float m_angle;	//角度
+	int type;			//タイプ
 	Collision::Info m_collision;		//当たり判定の情報
 	Collision::Triangle m_triangle[2]; //三角形の情報
 
 public:
-	Ground();
+	Ground(float posx, float posy, float posz, float sizex, float sizey, float sizez, float angle,int type );
 	~Ground();
 
 	//更新処理

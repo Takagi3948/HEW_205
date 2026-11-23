@@ -5,18 +5,15 @@
 
 
 SceneGame::SceneGame()
-	:m_pGround(nullptr)
-	,m_pGoal(nullptr)
+	:m_pGoal(nullptr)
 	,m_pCamera(nullptr)
 	,m_pModel(nullptr)
 	,m_pPlayerManager(nullptr)
 	,m_pStand(nullptr)
 	,m_pFruit(nullptr)
-	,m_pEnemy{nullptr, nullptr, nullptr}
+	,m_pStageManager(nullptr)
 {
-	m_pGround = new Ground;
-	m_pGround->SetPos(0.0f, -0.25f, 0.0f);
-	m_pGround->SetScale(20.0f, 0.5f, 1.0f);
+	m_pStageManager = new CStageManager(1, 1);
 
 	m_pGoal = new Goal;
 	m_pGoal->SetPos(0.0f, 1.0f, 0.0f);
@@ -31,17 +28,11 @@ SceneGame::SceneGame()
 
 	m_pStand = new CStand();
 
-	for (int i = 0; i < MAX_ENEMY; i++)
-	{
-		m_pEnemy[i] = new CEnemy;
-	}
-	m_pEnemy[0]->SetPos(5.0f, 3.0f, 0.0f);
-	m_pEnemy[1]->SetPos(0.0f, 5.0f, 0.0f);
-	m_pEnemy[2]->SetPos(-7.0f, 4.0f, 0.0f);
+
 
 	m_pFruit = new CFruit();
 	m_pFruit->SetCamera(m_pCamera);
-	m_pFruit->SetGround(m_pGround);
+	//m_pFruit->SetGround(m_pGround);
 	m_pFruit->SetStand(m_pStand);
 
 
@@ -49,11 +40,6 @@ SceneGame::SceneGame()
 
 SceneGame::~SceneGame()
 {
-	if (m_pGround)
-	{
-		delete m_pGround;
-		m_pGround = nullptr;
-	}
 	if (m_pGoal)
 	{
 		delete m_pGoal;
@@ -84,68 +70,26 @@ SceneGame::~SceneGame()
 		delete m_pFruit;
 		m_pFruit = nullptr;
 	}
-	for (int i = 0; i < MAX_ENEMY; i++)
+	if (m_pStageManager)
 	{
-		if (m_pEnemy[i])
-		{
-			delete m_pEnemy[i];
-			m_pEnemy[i] = nullptr;
-		}
+		delete m_pStageManager;
+		m_pStageManager = nullptr;
 	}
 }
 
 void SceneGame::Update()
 {
-	m_pGround->Update();
+	m_pStageManager->Update();
+
 	m_pGoal->Update();
 	
 	m_pPlayerManager->Update();
 	m_pPlayerManager->Reset();
 
-
-	//PlayerとGroundの当たり判定
-	Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), m_pGround->GetCollision());
-	//判定
-	if (Rightresult.isHit)
-	{
-		//  点の情報
-		Collision::Point point;
-		point.pos = Rightresult.point; //  平面と線分の交点を設定
-		//---  斜面の情報（四角形ではなく、三角形に分割）
-		Collision::Triangle* triangle = m_pGround->GetTriangle();
-		
-
-		for (int i = 0; i < 2; ++i) {
-			Rightresult = Collision::Hit(point, triangle[i]);
-			if (Rightresult.isHit) {
-				m_pPlayerManager->RightOnCollision(Rightresult);
-				break;
-			}
-		}
-	}
-	
-	Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), m_pGround->GetCollision());
-	//判定
-	if (Leftresult.isHit)
-	{
-		//  点の情報
-		Collision::Point point;
-		point.pos = Leftresult.point; //  平面と線分の交点を設定
-		//---  斜面の情報（四角形ではなく、三角形に分割）
-		Collision::Triangle* triangle = m_pGround->GetTriangle();
-
-
-		//地面に当たってるか判定を取る
-		for (int i = 0; i < 2; ++i) {
-			Leftresult = Collision::Hit(point, triangle[i]);
-			if (Leftresult.isHit) {
-				m_pPlayerManager->LeftOnCollision(Leftresult);
-				break;
-			}
-			
-		}
-	}
-	
+	//プレイヤーと地面の当たり判定
+	//長すぎるので別の関数へ左遷
+	R_IsHitGround();
+	L_IsHitGround();
 
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
@@ -155,9 +99,6 @@ void SceneGame::Update()
 
 	m_pFruit->Update();
 
-	m_pEnemy[0]->Update();
-	m_pEnemy[1]->Update();
-	m_pEnemy[2]->Update();
 }
 
 void SceneGame::Draw()
@@ -171,18 +112,14 @@ void SceneGame::Draw()
 	ShaderList::SetView(m_pCamera->GetViewMatrix());
 	ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
 
-
+	m_pStageManager->Draw();
 	//Geometory::DrawBox(); 
-	m_pGround->Draw();
 	//m_pGoal->Draw();
 	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 
 	m_pFruit->Draw();
 
-	m_pEnemy[0]->Draw();
-	m_pEnemy[1]->Draw();
-	m_pEnemy[2]->Draw();
 }
 
 
@@ -236,3 +173,77 @@ void SceneGame::ModelDraw(Model* model,float posX,float posY,float posZ, float s
 		return;
 	}
 }
+
+
+//右PlayerとGroundの当たり判定
+void SceneGame::R_IsHitGround()
+{
+	int groundCount = m_pStageManager->GetGroundCount();
+
+	for (int g = 0; g < groundCount; g++)
+	{
+		Collision::Info groundCollision = m_pStageManager->GetGroundCollision(g);
+
+		Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), groundCollision);
+		
+		//判定
+		if (Rightresult.isHit)
+		{
+			//  点の情報
+			Collision::Point point;
+			point.pos = Rightresult.point; //  平面と線分の交点を設定
+			//---  斜面の情報（四角形ではなく、三角形に分割）
+			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
+
+			if (!triangle) continue;
+
+			for (int i = 0; i < 2; ++i) {
+				Rightresult = Collision::Hit(point, triangle[i]);
+				if (Rightresult.isHit) {
+					m_pPlayerManager->RightOnCollision(Rightresult);
+					break;
+				}
+			}
+		}
+	}
+
+	
+
+}
+
+//左PlayerとGroundの当たり判定
+void SceneGame::L_IsHitGround()
+{
+	int groundCount = m_pStageManager->GetGroundCount();
+
+	for (int g = 0; g < groundCount; g++)
+	{
+		Collision::Info groundCollision = m_pStageManager->GetGroundCollision(g);
+
+		Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), groundCollision);
+		
+		//判定
+		if (Leftresult.isHit)
+		{
+			//  点の情報
+			Collision::Point point;
+			point.pos = Leftresult.point; //  平面と線分の交点を設定
+			//---  斜面の情報（四角形ではなく、三角形に分割）
+			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
+
+			if (!triangle) continue;
+
+			//地面に当たってるか判定を取る
+			for (int i = 0; i < 2; ++i) {
+				Leftresult = Collision::Hit(point, triangle[i]);
+				if (Leftresult.isHit) {
+					m_pPlayerManager->LeftOnCollision(Leftresult);
+					break;
+				}
+
+			}
+		}
+	}
+}
+
+

@@ -12,6 +12,7 @@ namespace
 	const float HIT_RADIUS   = 0.05f;  // 判定球の半径（既存の radius/10）
 	const float PUSH_OUT     = 0.001f; // 跳ね返し後に台から浮かせる量
 	const float OUT_Y        = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
+	const float RESTITUTION = 1.0f; // 反発係数（1.0 = エネルギー損失なし）
 }
 
 CFruit::CFruit()
@@ -77,6 +78,7 @@ void CFruit::Update()
 	//const float GRAVITY = 0.05f;
 	//m_pos.y -= GRAVITY;
 
+	/*
 	//各値の取得
 	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y + 0.5f),m_pos.z} , radius / 10 };// 通常値だと当たる前にFlyしやがったので変更。(無理やり)
 	Collision::Box GroundBox = m_pGround->GetBox();
@@ -95,6 +97,7 @@ void CFruit::Update()
 	{
 		m_pos.y = -9.0f;
 	}
+	*/
 }
 
 void CFruit::Draw()
