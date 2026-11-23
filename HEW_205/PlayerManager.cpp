@@ -44,14 +44,14 @@ void CPlayerManager::Update()
 	//m_pRightPlayer->SetLineStart(R_Pos);
 
 	// 移動速度
-	const float MOVE_SPEED = 0.025f;
+	const float MOVE_SPEED = 0.03f;
 
 	// 重力
 	const float PLAYERGRAVITY = 0.012f;
 	const float JUMPGRAVITY = 0.024f;
 
 	// ジャンプ力
-	const float JUMP_POWER = 0.25f;
+	const float JUMP_POWER = 0.2f;
 
 	// 左プレイヤー移動
 	if (IsKeyPress('A'))
