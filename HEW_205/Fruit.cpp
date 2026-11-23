@@ -6,9 +6,9 @@
 
 namespace
 {
-	const float Fruit_GRAVITY      = 0.004f; // 毎フレーム速度に足す量
+	const float Fruit_GRAVITY      = 0.002f; // 毎フレーム速度に足す量
 	const float BOUNCE_SPEED = 0.15f;  // 跳ね返り直後の速さ（1フレームあたり）
-	const float HIT_OFFSET_Y = 0.5f;   // m_pos から判定球の中心までの高さ（既存の +0.5f）
+	const float HIT_OFFSET_Y = 0.0f;   // m_pos から判定球の中心までの高さ（既存の +0.5f）
 	const float HIT_RADIUS   = 0.05f;  // 判定球の半径（既存の radius/10）
 	const float PUSH_OUT     = 0.001f; // 跳ね返し後に台から浮かせる量
 	const float OUT_Y        = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
