@@ -20,22 +20,7 @@ Goal::~Goal()
 
 void Goal::Update(CFruit* fruit)
 {
-	if (IsKeyPress('W'))
-	{
-		m_pos[1] += 0.1;
-	}
-	if (IsKeyPress('A'))
-	{
-		m_pos[0] -= 0.1;
-	}
-	if (IsKeyPress('S'))
-	{
-		m_pos[1] -= 0.1;
-	}
-	if (IsKeyPress('D'))
-	{
-		m_pos[0] += 0.1;
-	}
+	
 
 	m_time += 1.0f / FPS;
 
@@ -54,7 +39,7 @@ void Goal::Update(CFruit* fruit)
 	if (result.isHit)
 	{
 		m_pos[1] = 0.0f;
-		//MessageBox(NULL, "ゴール！！！", "ゴール！！！", MB_OK);
+		MessageBox(NULL, "ゴール！！！", "ゴール！！！", MB_OK);
 	}
 }
 
