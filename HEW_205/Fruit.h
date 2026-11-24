@@ -34,7 +34,7 @@ public:
 	void Draw();
 
 	//Enemy
-	void OnEnemyCollision(Collision::Result collision);
+	void OnEnemyCollision(Collision::Result collision, Collision::Info enemybox);
 
 	//Ground
 	void OnGroundCollision(Collision::Result collision);

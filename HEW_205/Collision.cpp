@@ -11,6 +11,7 @@ Collision::Result Collision::Hit(Info a, Info b)
 	}
 	else if (a.type == eLine && b.type == ePlane)
 		out = Hit(b.plane, a.line);
+	else out = Hit(a.sphere, b.box);
 
 	return out;
 }

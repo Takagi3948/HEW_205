@@ -92,6 +92,8 @@ void SceneGame::Update()
 	L_IsHitGround();
 	R_IsHitSideGround();
 	L_IsHitSideGround();
+	FruitIsHitEnemy();
+	FruitIsHitGround();
 
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
@@ -356,12 +358,54 @@ void SceneGame::L_IsHitSideGround()
 
 void SceneGame::FruitIsHitGround()
 {
+	int groundCount = m_pStageManager->GetGroundCount();
 
+	for (int g = 0; g < groundCount; g++)
+	{
+		Collision::Info groundCollision = m_pStageManager->GetGroundCollision(g);
+
+		Collision::Result result = Collision::Hit(m_pFruit->GetGroundCollision(), groundCollision);
+
+		//判定
+		if (result.isHit)
+		{
+			//  点の情報
+			Collision::Point point;
+			point.pos = result.point; //  平面と線分の交点を設定
+			//---  斜面の情報（四角形ではなく、三角形に分割）
+			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
+
+			if (!triangle) continue;
+
+			//地面に当たってるか判定を取る
+			for (int i = 0; i < 2; ++i) {
+				result = Collision::Hit(point, triangle[i]);
+				if (result.isHit) {
+					m_pFruit->OnGroundCollision(result);
+					break;
+				}
+
+			}
+		}
+	}
 }
 
 void SceneGame::FruitIsHitEnemy()
 {
+	int enemyCount = m_pStageManager->GetEnemyCount();
 
+	for (int g = 0; g < enemyCount; g++)
+	{
+		Collision::Info enemyCollision = m_pStageManager->GetEnemyCollision(g);
+
+		Collision::Result result = Collision::Hit(m_pFruit->GetEnemyCollision(), enemyCollision);
+
+		//判定
+		if (result.isHit)
+		{
+			m_pFruit->OnEnemyCollision(result,enemyCollision);
+		}
+	}
 }
 
 
