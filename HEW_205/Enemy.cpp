@@ -25,8 +25,8 @@ void CEnemy::Update()
 
 	//ÉTÉCÉYÇÃê›íË
 	m_collision.box.size.x = m_scale[0];
-	m_collision.box.size.y = m_scale[0];
-	m_collision.box.size.z = m_scale[0];
+	m_collision.box.size.y = m_scale[1];
+	m_collision.box.size.z = m_scale[2];
 
 }
 

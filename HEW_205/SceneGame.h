@@ -21,6 +21,10 @@ public:
 	void ModelDraw(Model* model,float posX, float posY, float posZ, float sizeX, float sizeY, float sizeZ);
 	void R_IsHitGround();
 	void L_IsHitGround();
+	void R_IsHitSideGround();
+	void L_IsHitSideGround();
+	void FruitIsHitGround();
+	void FruitIsHitEnemy();
 
 
 private:

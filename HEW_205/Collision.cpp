@@ -11,6 +11,7 @@ Collision::Result Collision::Hit(Info a, Info b)
 	}
 	else if (a.type == eLine && b.type == ePlane)
 		out = Hit(b.plane, a.line);
+	else out = Hit(a.sphere, b.box);
 
 	return out;
 }
@@ -164,7 +165,8 @@ Collision::Result Collision::Hit(Plane plane, Line line)
 	DirectX::XMStoreFloat(&dotStart, vDotStart);
 	DirectX::XMStoreFloat(&dotEnd, vDotEnd);
 
-	if (dotStart > 0.0f && dotEnd < 0.0f) {
+	if ((dotStart > 0.0f && dotEnd < 0.0f) ||
+		(dotStart < 0.0f && dotEnd > 0.0f)) {
 		//  各内積の値を絶対値に変換して、衝突位置までのベクトルを計算
 		dotStart = fabsf(dotStart);
 		dotEnd = fabsf(dotEnd);

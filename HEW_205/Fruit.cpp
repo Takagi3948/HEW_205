@@ -21,12 +21,14 @@ namespace
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
-	,m_vel(0.0f,0.0f,0.0f)
+	, m_vel(0.0f, 0.0f, 0.0f)
 	, radius(0.5f)
 	, m_pModel(nullptr)
 	, m_pCamera(nullptr)
 	, m_pStand(nullptr)
 	, m_pGround(nullptr)
+	, m_EnemyCollision()
+	, m_GroundCollision()
 {
 	m_pModel = new Model();
 
@@ -34,6 +36,9 @@ CFruit::CFruit()
 	{
 		MessageBox(NULL, "モデル読み込み失敗", "Load Error", MB_OK);
 	}
+
+	m_EnemyCollision.type = Collision::eSphere;
+	m_GroundCollision.type = Collision::eLine;
 
 }
 
@@ -135,31 +140,23 @@ void CFruit::Update()
 		}
 	}
 	
-	
-	//重力
-	//const float GRAVITY = 0.05f;
-	//m_pos.y -= GRAVITY;
+	//当たり判定の計算
+	m_EnemyCollision.sphere.center = m_pos;
+	m_EnemyCollision.sphere.radius = radius;
 
-	/*
-	//各値の取得
-	Collision::Sphere FruitSphere = Collision::Sphere{ {m_pos.x,(m_pos.y + 0.5f),m_pos.z} , radius / 10 };// 通常値だと当たる前にFlyしやがったので変更。(無理やり)
-	Collision::Box GroundBox = m_pGround->GetBox();
-	//Collision::Box StandBox = m_pStand->GetBox();
+	m_GroundCollision.line.start = {
+		m_pos.x,
+		m_pos.y,
+		m_pos.z
+	};
 
-	//Collision::Result ResultStand = Collision::Result{ Collision::Hit(FruitSphere,StandBox) };
-	////台と当たったら、仮で座標を3.0fに飛ばす。
-	//if (ResultStand.isHit)
-	//{
-	//	m_pos.y = 3.0f;
-	//}
+	m_GroundCollision.line.end = {
+		m_pos.x,
+		m_pos.y - 0.25f,
+		m_pos.z
+	};
 
-	Collision::Result RsultGround = Collision::Result{ Collision::Hit(FruitSphere,GroundBox) };
-	//グラウンドと当たったら仮でy座標を-9.0(画面外)に飛ばす。
-	if (RsultGround.isHit)
-	{
-		m_pos.y = -9.0f;
-	}
-	*/
+
 }
 
 void CFruit::Draw()
@@ -208,9 +205,92 @@ void CFruit::Draw()
 	}
 
 
+}
 
+void CFruit::OnEnemyCollision(Collision::Result collision,Collision::Info enemyBox)
+{
+	//入射角も含めた反射
+	// EnemyのBOXの範囲を取得
+	float minX = enemyBox.box.center.x - enemyBox.box.size.x * 0.5f;
+	float maxX = enemyBox.box.center.x + enemyBox.box.size.x * 0.5f;
+	float minY = enemyBox.box.center.y - enemyBox.box.size.y * 0.5f;
+	float maxY = enemyBox.box.center.y + enemyBox.box.size.y * 0.5f;
 
+	// Fruitの中心に最も近いBOX上の点を求める
+	float closestX = m_pos.x;
+	float closestY = m_pos.y;
 
+	if (closestX < minX) closestX = minX;
+	if (closestX > maxX) closestX = maxX;
+
+	if (closestY < minY) closestY = minY;
+	if (closestY > maxY) closestY = maxY;
+
+	// 法線を計算
+	float nx = m_pos.x - closestX;
+	float ny = m_pos.y - closestY;
+
+	float length = sqrtf(nx * nx + ny * ny);
+
+	// BOX内部に中心が入っている場合
+	if (length < 0.0001f)
+	{
+		float left = m_pos.x - minX;
+		float right = maxX - m_pos.x;
+		float bottom = m_pos.y - minY;
+		float top = maxY - m_pos.y;
+
+		float minDist = left;
+		nx = -1.0f;
+		ny = 0.0f;
+
+		if (right < minDist)
+		{
+			minDist = right;
+			nx = 1.0f;
+			ny = 0.0f;
+		}
+
+		if (bottom < minDist)
+		{
+			minDist = bottom;
+			nx = 0.0f;
+			ny = -1.0f;
+		}
+
+		if (top < minDist)
+		{
+			nx = 0.0f;
+			ny = 1.0f;
+		}
+	}
+	else
+	{
+		nx /= length;
+		ny /= length;
+	}
+
+	// 衝突直前の速度
+	DirectX::XMFLOAT3 inVel = m_vel;
+
+	// 入射角を考慮した反射
+	float dot = inVel.x * nx + inVel.y * ny;
+
+	// Enemyから離れる方向なら反射しない
+	if (dot >= 0.0f) return;
+
+	m_vel.x = inVel.x - 2.0f * dot * nx;
+	m_vel.y = inVel.y - 2.0f * dot * ny;
+
+	// めり込み防止
+	m_pos.x = closestX + nx * (radius + PUSH_OUT);
+	m_pos.y = closestY + ny * (radius + PUSH_OUT);
+
+}
+
+void CFruit::OnGroundCollision(Collision::Result collision)
+{
+	m_pos.y = -9.0f;
 }
 
 void CFruit::SetPos(float x, float y, float z)

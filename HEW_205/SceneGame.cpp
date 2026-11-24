@@ -90,6 +90,10 @@ void SceneGame::Update()
 	//長すぎるので別の関数へ左遷
 	R_IsHitGround();
 	L_IsHitGround();
+	R_IsHitSideGround();
+	L_IsHitSideGround();
+	FruitIsHitEnemy();
+	FruitIsHitGround();
 
 	m_pCamera->SetPos(m_pPlayerManager->GetPos());
 	m_pCamera->Update();
@@ -245,5 +249,165 @@ void SceneGame::L_IsHitGround()
 		}
 	}
 }
+
+//右プレイヤーと地面（横）の当たり判定
+void SceneGame::R_IsHitSideGround()
+{
+	int groundCount = m_pStageManager->GetGroundCount();
+
+	for (int g = 0; g < groundCount; g++)
+	{
+		// 左右2つの側面平面
+		Collision::Info* groundCollision =
+			m_pStageManager->GetGroundSideCollision(g);
+
+		// 左右4つの三角形
+		Collision::Triangle* triangle =
+			m_pStageManager->GetGroundSideTriangle(g);
+
+		if (!groundCollision || !triangle) continue;
+
+		// プレイヤーの横方向の線分
+		Collision::Info playerCollision =
+			m_pPlayerManager->RightGetSideCollision();
+
+		// 左右の側面を調べる
+		for (int side = 0; side < 2; side++)
+		{
+			Collision::Result result =
+				Collision::Hit(playerCollision, groundCollision[side]);
+
+			if (!result.isHit) continue;
+
+			Collision::Point point;
+			point.pos = result.point;
+
+			// side 0なら三角形0,1
+			// side 1なら三角形2,3
+			for (int i = 0; i < 2; i++)
+			{
+				int triangleIndex = side * 2 + i;
+
+				Collision::Result triangleResult =
+					Collision::Hit(point, triangle[triangleIndex]);
+
+				if (triangleResult.isHit)
+				{
+					m_pPlayerManager->RightOnSideCollision(
+						triangleResult, side);
+
+					break;
+				}
+			}
+		}
+	}
+}
+
+//左プレイヤーと地面（横）の当たり判定
+void SceneGame::L_IsHitSideGround()
+{
+	int groundCount = m_pStageManager->GetGroundCount();
+
+	for (int g = 0; g < groundCount; g++)
+	{
+		// 左右2つの側面平面
+		Collision::Info* groundCollision =
+			m_pStageManager->GetGroundSideCollision(g);
+
+		// 左右4つの三角形
+		Collision::Triangle* triangle =
+			m_pStageManager->GetGroundSideTriangle(g);
+
+		if (!groundCollision || !triangle) continue;
+
+		// プレイヤーの横方向の線分
+		Collision::Info playerCollision =
+			m_pPlayerManager->LeftGetSideCollision();
+
+		// 左右の側面を調べる
+		for (int side = 0; side < 2; side++)
+		{
+			Collision::Result result =
+				Collision::Hit(playerCollision, groundCollision[side]);
+
+			if (!result.isHit) continue;
+
+			Collision::Point point;
+			point.pos = result.point;
+
+			// side 0なら三角形0,1
+			// side 1なら三角形2,3
+			for (int i = 0; i < 2; i++)
+			{
+				int triangleIndex = side * 2 + i;
+
+				Collision::Result triangleResult =
+					Collision::Hit(point, triangle[triangleIndex]);
+
+				if (triangleResult.isHit)
+				{
+					m_pPlayerManager->LeftOnSideCollision(
+						triangleResult, side);
+
+					break;
+				}
+			}
+		}
+	}
+}
+
+void SceneGame::FruitIsHitGround()
+{
+	int groundCount = m_pStageManager->GetGroundCount();
+
+	for (int g = 0; g < groundCount; g++)
+	{
+		Collision::Info groundCollision = m_pStageManager->GetGroundCollision(g);
+
+		Collision::Result result = Collision::Hit(m_pFruit->GetGroundCollision(), groundCollision);
+
+		//判定
+		if (result.isHit)
+		{
+			//  点の情報
+			Collision::Point point;
+			point.pos = result.point; //  平面と線分の交点を設定
+			//---  斜面の情報（四角形ではなく、三角形に分割）
+			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
+
+			if (!triangle) continue;
+
+			//地面に当たってるか判定を取る
+			for (int i = 0; i < 2; ++i) {
+				result = Collision::Hit(point, triangle[i]);
+				if (result.isHit) {
+					m_pFruit->OnGroundCollision(result);
+					break;
+				}
+
+			}
+		}
+	}
+}
+
+void SceneGame::FruitIsHitEnemy()
+{
+	int enemyCount = m_pStageManager->GetEnemyCount();
+
+	for (int g = 0; g < enemyCount; g++)
+	{
+		Collision::Info enemyCollision = m_pStageManager->GetEnemyCollision(g);
+
+		Collision::Result result = Collision::Hit(m_pFruit->GetEnemyCollision(), enemyCollision);
+
+		//判定
+		if (result.isHit)
+		{
+			m_pFruit->OnEnemyCollision(result,enemyCollision);
+		}
+	}
+}
+
+
 
 
