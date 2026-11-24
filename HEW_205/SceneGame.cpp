@@ -95,7 +95,7 @@ SceneGame::~SceneGame()
 void SceneGame::Update()
 {
 	m_pGround->Update();
-	//m_pGoal->Update(m_pFruit);
+	m_pGoal->Update(m_pFruit);
 	
 	m_pPlayerManager->Update();
 
@@ -119,7 +119,7 @@ void SceneGame::Draw()
 
 	//Geometory::DrawBox(); 
 	m_pGround->Draw();
-	//m_pGoal->Draw();
+	m_pGoal->Draw();
 	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 

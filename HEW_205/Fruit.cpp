@@ -99,3 +99,13 @@ void CFruit::SetPos(float x, float y, float z)
 	m_pos.z = z;
 }
 
+DirectX::XMFLOAT3 CFruit::GetPos()
+{
+	return m_pos;
+}
+
+float CFruit::GetRadius()
+{
+	return radius;
+}
+

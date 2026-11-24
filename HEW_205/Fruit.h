@@ -32,5 +32,11 @@ public:
 	//À•W‚Ìİ’è
 	void SetPos(float x, float y, float z);
 
+	// À•W‚Ìæ“¾
+	DirectX::XMFLOAT3 GetPos();
+
+	// ”¼Œa‚Ìæ“¾
+	float GetRadius();
+
 
 };
