@@ -38,6 +38,7 @@ void Goal::Update(CFruit* fruit)
 
 	if (result.isHit)
 	{
+		m_pos[1] = 100.0f;
 		MessageBox(NULL, "ゴール！！！", "ゴール！！！", MB_OK);
 	}
 }

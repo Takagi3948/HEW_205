@@ -6,7 +6,7 @@
 
 namespace
 {
-	const float Fruit_GRAVITY      = 0.002f; // 毎フレーム速度に足す量
+	const float Fruit_GRAVITY      = 0.001f; // 毎フレーム速度に足す量
 	const float BOUNCE_SPEED = 0.15f;  // 跳ね返り直後の速さ（1フレームあたり）
 	const float HIT_OFFSET_Y = 0.0f;   // m_pos から判定球の中心までの高さ（既存の +0.5f）
 	const float HIT_RADIUS   = 0.05f;  // 判定球の半径（既存の radius/10）
@@ -14,15 +14,15 @@ namespace
 	const float OUT_Y        = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
 	const float RESTITUTION = 1.0f; // 反発係数（1.0 = エネルギー損失なし）
 	const float BASE_BOUNCE_SPEED = 0.1f;  //基準となる強さ
-	const float CENTER_BOUNCE = 1.5f; // 中央の強さ
-	const float EDGE_BOUNCE = 0.5f; // 端の強さ
+	const float CENTER_BOUNCE = 1.0f; // 中央の強さ
+	const float EDGE_BOUNCE = 0.35f; // 端の強さ
 
 }
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
 	, m_vel(0.0f, 0.0f, 0.0f)
-	, radius(0.5f)
+	, radius(0.3f)
 	, m_pModel(nullptr)
 	, m_pCamera(nullptr)
 	, m_pStand(nullptr)
@@ -290,7 +290,8 @@ void CFruit::OnEnemyCollision(Collision::Result collision,Collision::Info enemyB
 
 void CFruit::OnGroundCollision(Collision::Result collision)
 {
-	m_pos.y = -9.0f;
+	m_pos.x = -100.0f;
+	MessageBox(NULL, "死！！！", "死！！！", MB_OK);
 }
 
 void CFruit::SetPos(float x, float y, float z)
