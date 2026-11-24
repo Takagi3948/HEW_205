@@ -46,6 +46,12 @@ public:
 	//座標の設定
 	void SetPos(float x, float y, float z);
 
+	// ���W�̎擾
+	DirectX::XMFLOAT3 GetPos();
+
+	// ���a�̎擾
+	float GetRadius();
+
 	void SetCamera(Camera* pCamera)
 	{
 		m_pCamera = pCamera;

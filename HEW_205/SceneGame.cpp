@@ -16,9 +16,9 @@ SceneGame::SceneGame()
 	m_pStageManager = new CStageManager(1, 1);
 
 	m_pGoal = new Goal;
-	m_pGoal->SetPos(0.0f, 1.0f, 0.0f);
+	m_pGoal->SetPos(10.0f, 1.5f, 0.0f);
 
-	//m_pCamera = new CameraDebug(); //Œp³‚³‚ê‚½Debug‚ÌƒNƒ‰ƒX‚ğ“ü‚ê‚é
+	//m_pCamera = new CameraDebug(); //ç¶™æ‰¿ã•ã‚ŒãŸDebugã®ã‚¯ãƒ©ã‚¹ã‚’å…¥ã‚Œã‚‹
 
 	m_pCamera = new MainCamera();
 
@@ -81,13 +81,13 @@ void SceneGame::Update()
 {
 	m_pStageManager->Update();
 
-	m_pGoal->Update();
+	m_pGoal->Update(m_pFruit);
 	
 	m_pPlayerManager->Update();
 	m_pPlayerManager->Reset();
 
-	//ƒvƒŒƒCƒ„[‚Æ’n–Ê‚Ì“–‚½‚è”»’è
-	//’·‚·‚¬‚é‚Ì‚Å•Ê‚ÌŠÖ”‚Ö¶‘J
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨åœ°é¢ã®å½“ãŸã‚Šåˆ¤å®š
+	//é•·ã™ãã‚‹ã®ã§åˆ¥ã®é–¢æ•°ã¸å·¦é·
 	R_IsHitGround();
 	L_IsHitGround();
 	R_IsHitSideGround();
@@ -107,7 +107,7 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
-	//[“xƒeƒXƒg‚Ì—LŒø‰»
+	//æ·±åº¦ãƒ†ã‚¹ãƒˆã®æœ‰åŠ¹åŒ–
 	SetDepthTest(DEPTH_ENABLE);
 
 
@@ -118,7 +118,7 @@ void SceneGame::Draw()
 
 	m_pStageManager->Draw();
 	//Geometory::DrawBox(); 
-	//m_pGoal->Draw();
+	m_pGoal->Draw();
 	m_pPlayerManager->Draw();
 	m_pStand->Draw();
 
@@ -135,7 +135,7 @@ void SceneGame::ModelDraw(Model* model,float posX,float posY,float posZ, float s
 	if (model)
 	{
 
-		//ƒ‚ƒfƒ‹‚ğ•\¦‚·‚é‚½‚ß‚Ìƒ[ƒ‹ƒhs—ñ‚ğ•ÏŠ·
+		//ãƒ¢ãƒ‡ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹ãŸã‚ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã‚’å¤‰æ›
 		DirectX::XMFLOAT4X4 fWorld;
 
 		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(posX, posY, posZ);
@@ -146,29 +146,29 @@ void SceneGame::ModelDraw(Model* model,float posX,float posY,float posZ, float s
 		DirectX::XMStoreFloat4x4(&fWorld, world);
 
 
-		//ƒVƒF[ƒ_[‚É•K—v‚Èƒf[ƒ^‚ğİ’è
+		//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã«å¿…è¦ãªãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š
 		ShaderList::SetWorld(fWorld);
 		ShaderList::SetView(m_pCamera->GetViewMatrix());
 		ShaderList::SetProjection(m_pCamera->GetProjectionMatrix());
 
-		// ƒ‚ƒfƒ‹‚Ég—p‚·‚éŠeíƒVƒF[ƒ_[‚ğİ’è 
+		// ãƒ¢ãƒ‡ãƒ«ã«ä½¿ç”¨ã™ã‚‹å„ç¨®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’è¨­å®š 
 		model->SetVertexShader(ShaderList::GetVS(ShaderList::VS_WORLD));
 		model->SetPixelShader(ShaderList::GetPS(ShaderList::PS_LAMBERT));
 
-		// ƒƒbƒVƒ…•Ê‚Éƒ‚ƒfƒ‹‚ğ•\¦ 
+		// ãƒ¡ãƒƒã‚·ãƒ¥åˆ¥ã«ãƒ¢ãƒ‡ãƒ«ã‚’è¡¨ç¤º 
 		for (int i = 0; i < model->GetMeshNum(); ++i) {
 
-			// ƒ‚ƒfƒ‹‚ÌƒƒbƒVƒ…‚ğæ“¾ 
+			// ãƒ¢ãƒ‡ãƒ«ã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å–å¾— 
 			const Model::Mesh* mesh = model->GetMesh(i);
 
-			// ƒƒbƒVƒ…‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒ}ƒeƒŠƒAƒ‹‚ğæ“¾ 
+			// ãƒ¡ãƒƒã‚·ãƒ¥ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å–å¾— 
 			Model::Material material = *model->GetMaterial(mesh->materialID);
 
 
-			// ƒVƒF[ƒ_[‚Öƒ}ƒeƒŠƒAƒ‹‚ğİ’è 
+			// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã¸ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®š 
 			ShaderList::SetMaterial(material);
 
-			// ƒ‚ƒfƒ‹‚Ì•`‰æ(“à•”“I‚ÉˆêŠ‡‚Ås‚Á‚Ä‚¢‚½•`‰æˆ—‚ğAƒƒbƒVƒ…‚²‚Æ‚Ì•`‰æˆ—‚É•ÏX) 
+			// ãƒ¢ãƒ‡ãƒ«ã®æç”»(å†…éƒ¨çš„ã«ä¸€æ‹¬ã§è¡Œã£ã¦ã„ãŸæç”»å‡¦ç†ã‚’ã€ãƒ¡ãƒƒã‚·ãƒ¥ã”ã¨ã®æç”»å‡¦ç†ã«å¤‰æ›´) 
 			model->Draw(i);
 		}
 	}
@@ -179,7 +179,7 @@ void SceneGame::ModelDraw(Model* model,float posX,float posY,float posZ, float s
 }
 
 
-//‰EPlayer‚ÆGround‚Ì“–‚½‚è”»’è
+//å³Playerã¨Groundã®å½“ãŸã‚Šåˆ¤å®š
 void SceneGame::R_IsHitGround()
 {
 	int groundCount = m_pStageManager->GetGroundCount();
@@ -190,13 +190,13 @@ void SceneGame::R_IsHitGround()
 
 		Collision::Result Rightresult = Collision::Hit(m_pPlayerManager->RightGetCollision(), groundCollision);
 		
-		//”»’è
+		//åˆ¤å®š
 		if (Rightresult.isHit)
 		{
-			//  “_‚Ìî•ñ
+			//  ç‚¹ã®æƒ…å ±
 			Collision::Point point;
-			point.pos = Rightresult.point; //  •½–Ê‚Æü•ª‚ÌŒğ“_‚ğİ’è
-			//---  Î–Ê‚Ìî•ñilŠpŒ`‚Å‚Í‚È‚­AOŠpŒ`‚É•ªŠ„j
+			point.pos = Rightresult.point; //  å¹³é¢ã¨ç·šåˆ†ã®äº¤ç‚¹ã‚’è¨­å®š
+			//---  æ–œé¢ã®æƒ…å ±ï¼ˆå››è§’å½¢ã§ã¯ãªãã€ä¸‰è§’å½¢ã«åˆ†å‰²ï¼‰
 			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
 
 			if (!triangle) continue;
@@ -215,7 +215,7 @@ void SceneGame::R_IsHitGround()
 
 }
 
-//¶Player‚ÆGround‚Ì“–‚½‚è”»’è
+//å·¦Playerã¨Groundã®å½“ãŸã‚Šåˆ¤å®š
 void SceneGame::L_IsHitGround()
 {
 	int groundCount = m_pStageManager->GetGroundCount();
@@ -226,18 +226,18 @@ void SceneGame::L_IsHitGround()
 
 		Collision::Result Leftresult = Collision::Hit(m_pPlayerManager->LeftGetCollision(), groundCollision);
 		
-		//”»’è
+		//åˆ¤å®š
 		if (Leftresult.isHit)
 		{
-			//  “_‚Ìî•ñ
+			//  ç‚¹ã®æƒ…å ±
 			Collision::Point point;
-			point.pos = Leftresult.point; //  •½–Ê‚Æü•ª‚ÌŒğ“_‚ğİ’è
-			//---  Î–Ê‚Ìî•ñilŠpŒ`‚Å‚Í‚È‚­AOŠpŒ`‚É•ªŠ„j
+			point.pos = Leftresult.point; //  å¹³é¢ã¨ç·šåˆ†ã®äº¤ç‚¹ã‚’è¨­å®š
+			//---  æ–œé¢ã®æƒ…å ±ï¼ˆå››è§’å½¢ã§ã¯ãªãã€ä¸‰è§’å½¢ã«åˆ†å‰²ï¼‰
 			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
 
 			if (!triangle) continue;
 
-			//’n–Ê‚É“–‚½‚Á‚Ä‚é‚©”»’è‚ğæ‚é
+			//åœ°é¢ã«å½“ãŸã£ã¦ã‚‹ã‹åˆ¤å®šã‚’å–ã‚‹
 			for (int i = 0; i < 2; ++i) {
 				Leftresult = Collision::Hit(point, triangle[i]);
 				if (Leftresult.isHit) {
@@ -250,28 +250,28 @@ void SceneGame::L_IsHitGround()
 	}
 }
 
-//‰EƒvƒŒƒCƒ„[‚Æ’n–Êi‰¡j‚Ì“–‚½‚è”»’è
+//å³ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨åœ°é¢ï¼ˆæ¨ªï¼‰ã®å½“ãŸã‚Šåˆ¤å®š
 void SceneGame::R_IsHitSideGround()
 {
 	int groundCount = m_pStageManager->GetGroundCount();
 
 	for (int g = 0; g < groundCount; g++)
 	{
-		// ¶‰E2‚Â‚Ì‘¤–Ê•½–Ê
+		// å·¦å³2ã¤ã®å´é¢å¹³é¢
 		Collision::Info* groundCollision =
 			m_pStageManager->GetGroundSideCollision(g);
 
-		// ¶‰E4‚Â‚ÌOŠpŒ`
+		// å·¦å³4ã¤ã®ä¸‰è§’å½¢
 		Collision::Triangle* triangle =
 			m_pStageManager->GetGroundSideTriangle(g);
 
 		if (!groundCollision || !triangle) continue;
 
-		// ƒvƒŒƒCƒ„[‚Ì‰¡•ûŒü‚Ìü•ª
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ¨ªæ–¹å‘ã®ç·šåˆ†
 		Collision::Info playerCollision =
 			m_pPlayerManager->RightGetSideCollision();
 
-		// ¶‰E‚Ì‘¤–Ê‚ğ’²‚×‚é
+		// å·¦å³ã®å´é¢ã‚’èª¿ã¹ã‚‹
 		for (int side = 0; side < 2; side++)
 		{
 			Collision::Result result =
@@ -282,8 +282,8 @@ void SceneGame::R_IsHitSideGround()
 			Collision::Point point;
 			point.pos = result.point;
 
-			// side 0‚È‚çOŠpŒ`0,1
-			// side 1‚È‚çOŠpŒ`2,3
+			// side 0ãªã‚‰ä¸‰è§’å½¢0,1
+			// side 1ãªã‚‰ä¸‰è§’å½¢2,3
 			for (int i = 0; i < 2; i++)
 			{
 				int triangleIndex = side * 2 + i;
@@ -303,28 +303,28 @@ void SceneGame::R_IsHitSideGround()
 	}
 }
 
-//¶ƒvƒŒƒCƒ„[‚Æ’n–Êi‰¡j‚Ì“–‚½‚è”»’è
+//å·¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨åœ°é¢ï¼ˆæ¨ªï¼‰ã®å½“ãŸã‚Šåˆ¤å®š
 void SceneGame::L_IsHitSideGround()
 {
 	int groundCount = m_pStageManager->GetGroundCount();
 
 	for (int g = 0; g < groundCount; g++)
 	{
-		// ¶‰E2‚Â‚Ì‘¤–Ê•½–Ê
+		// å·¦å³2ã¤ã®å´é¢å¹³é¢
 		Collision::Info* groundCollision =
 			m_pStageManager->GetGroundSideCollision(g);
 
-		// ¶‰E4‚Â‚ÌOŠpŒ`
+		// å·¦å³4ã¤ã®ä¸‰è§’å½¢
 		Collision::Triangle* triangle =
 			m_pStageManager->GetGroundSideTriangle(g);
 
 		if (!groundCollision || !triangle) continue;
 
-		// ƒvƒŒƒCƒ„[‚Ì‰¡•ûŒü‚Ìü•ª
+		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ¨ªæ–¹å‘ã®ç·šåˆ†
 		Collision::Info playerCollision =
 			m_pPlayerManager->LeftGetSideCollision();
 
-		// ¶‰E‚Ì‘¤–Ê‚ğ’²‚×‚é
+		// å·¦å³ã®å´é¢ã‚’èª¿ã¹ã‚‹
 		for (int side = 0; side < 2; side++)
 		{
 			Collision::Result result =
@@ -335,8 +335,8 @@ void SceneGame::L_IsHitSideGround()
 			Collision::Point point;
 			point.pos = result.point;
 
-			// side 0‚È‚çOŠpŒ`0,1
-			// side 1‚È‚çOŠpŒ`2,3
+			// side 0ãªã‚‰ä¸‰è§’å½¢0,1
+			// side 1ãªã‚‰ä¸‰è§’å½¢2,3
 			for (int i = 0; i < 2; i++)
 			{
 				int triangleIndex = side * 2 + i;
@@ -366,18 +366,18 @@ void SceneGame::FruitIsHitGround()
 
 		Collision::Result result = Collision::Hit(m_pFruit->GetGroundCollision(), groundCollision);
 
-		//”»’è
+		//åˆ¤å®š
 		if (result.isHit)
 		{
-			//  “_‚Ìî•ñ
+			//  ç‚¹ã®æƒ…å ±
 			Collision::Point point;
-			point.pos = result.point; //  •½–Ê‚Æü•ª‚ÌŒğ“_‚ğİ’è
-			//---  Î–Ê‚Ìî•ñilŠpŒ`‚Å‚Í‚È‚­AOŠpŒ`‚É•ªŠ„j
+			point.pos = result.point; //  å¹³é¢ã¨ç·šåˆ†ã®äº¤ç‚¹ã‚’è¨­å®š
+			//---  æ–œé¢ã®æƒ…å ±ï¼ˆå››è§’å½¢ã§ã¯ãªãã€ä¸‰è§’å½¢ã«åˆ†å‰²ï¼‰
 			Collision::Triangle* triangle = m_pStageManager->GetGroundTriangle(g);
 
 			if (!triangle) continue;
 
-			//’n–Ê‚É“–‚½‚Á‚Ä‚é‚©”»’è‚ğæ‚é
+			//åœ°é¢ã«å½“ãŸã£ã¦ã‚‹ã‹åˆ¤å®šã‚’å–ã‚‹
 			for (int i = 0; i < 2; ++i) {
 				result = Collision::Hit(point, triangle[i]);
 				if (result.isHit) {
@@ -400,7 +400,7 @@ void SceneGame::FruitIsHitEnemy()
 
 		Collision::Result result = Collision::Hit(m_pFruit->GetEnemyCollision(), enemyCollision);
 
-		//”»’è
+		//åˆ¤å®š
 		if (result.isHit)
 		{
 			m_pFruit->OnEnemyCollision(result,enemyCollision);
