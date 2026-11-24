@@ -50,10 +50,10 @@ void CPlayerManager::Update()
 
 	// 重力
 	const float PLAYERGRAVITY = 0.012f;
-	const float JUMPGRAVITY = 0.024f;
+	const float JUMPGRAVITY = 0.015f;
 
 	// ジャンプ力
-	const float JUMP_POWER = 0.2f;
+	const float JUMP_POWER = 0.15f;
 
 	// 壁にぶつかっていないときのみプレイヤー移動
 	if (IsKeyPress('A') && !L_IsSideGround)

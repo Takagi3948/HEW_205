@@ -16,7 +16,7 @@ SceneGame::SceneGame()
 	m_pStageManager = new CStageManager(1, 1);
 
 	m_pGoal = new Goal;
-	m_pGoal->SetPos(10.0f, 1.5f, 0.0f);
+	m_pGoal->SetPos(30.0f, 2.0f, 0.0f);
 
 	//m_pCamera = new CameraDebug(); //継承されたDebugのクラスを入れる
 
