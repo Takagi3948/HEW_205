@@ -16,6 +16,8 @@ CPlayerManager::CPlayerManager()
 	, leftJump(false)
 	, L_isGround(false)
 	, R_isGround(false)
+	, R_IsSideGround(false)
+	, L_IsSideGround(false)
 {
 	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, L_Pos.z);
 	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, R_Pos.z);
@@ -53,25 +55,25 @@ void CPlayerManager::Update()
 	// ジャンプ力
 	const float JUMP_POWER = 0.2f;
 
-	// 左プレイヤー移動
-	if (IsKeyPress('A'))
+	// 壁にぶつかっていないときのみプレイヤー移動
+	if (IsKeyPress('A') && !L_IsSideGround)
 	{
 		L_Pos.x -= MOVE_SPEED;
 		R_Pos.x -= MOVE_SPEED;
 	}
-	if (IsKeyPress(VK_LEFT))
+	if (IsKeyPress(VK_LEFT) && !L_IsSideGround)
 	{
 		L_Pos.x -= MOVE_SPEED;
 		R_Pos.x -= MOVE_SPEED;
 	}
 
 
-	if (IsKeyPress('D'))
+	if (IsKeyPress('D') && !R_IsSideGround)
 	{
 		L_Pos.x += MOVE_SPEED;
 		R_Pos.x += MOVE_SPEED;
 	}
-	if (IsKeyPress(VK_RIGHT))
+	if (IsKeyPress(VK_RIGHT) && !R_IsSideGround)
 	{
 		L_Pos.x += MOVE_SPEED;
 		R_Pos.x += MOVE_SPEED;
@@ -120,6 +122,8 @@ void CPlayerManager::Update()
 		R_Pos.y += rightVelocityY;
 		rightVelocityY -= JUMPGRAVITY;
 	}
+	
+	
 
 	// 座標を反映
 	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
@@ -128,9 +132,6 @@ void CPlayerManager::Update()
 	m_pLeftPlayer->Update();
 	m_pRightPlayer->Update();
 
-	//地面にいるかどうか判定の初期化
-	//R_isGround = false;
-	//L_isGround = false;
 }
 
 void CPlayerManager::Draw()
@@ -155,10 +156,22 @@ Collision::Info CPlayerManager::RightGetCollision()
 	return m_pRightPlayer->GetCollision();
 }
 
+//右当たり判定（横）
+Collision::Info CPlayerManager::RightGetSideCollision()
+{
+	return m_pRightPlayer->GetSideCollision();
+}
+
 //左当たり判定
 Collision::Info CPlayerManager::LeftGetCollision()
 {
 	return m_pLeftPlayer->GetCollision();
+}
+
+//左当たり判定（横）
+Collision::Info CPlayerManager::LeftGetSideCollision()
+{
+	return m_pLeftPlayer->GetSideCollision();
 }
 
 void CPlayerManager::RightOnCollision(Collision::Result collision)
@@ -183,10 +196,63 @@ void CPlayerManager::LeftOnCollision(Collision::Result collision)
 	L_isGround = true;
 }
 
+
+void CPlayerManager::RightOnSideCollision(Collision::Result collision, int side)
+{
+	R_IsSideGround = true;
+
+	const float PLAYER_DISTANCE = 2.0f;
+
+	switch (side)
+	{
+	case 0:
+		R_Pos.x = collision.point.x - 0.25f;
+		break;
+
+	case 1:
+		R_Pos.x = collision.point.x + 0.25f;
+		break;
+	}
+
+	// 二人の距離を一定にする
+	L_Pos.x = R_Pos.x - PLAYER_DISTANCE;
+
+	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
+	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
+}
+
+void CPlayerManager::LeftOnSideCollision(Collision::Result collision, int side)
+{
+	L_IsSideGround = true;
+
+	const float PLAYER_DISTANCE = 2.0f;
+
+	switch (side)
+	{
+	case 0:
+		L_Pos.x = collision.point.x - 0.25f;
+		break;
+
+	case 1:
+		L_Pos.x = collision.point.x + 0.25f;
+		break;
+	}
+
+	// 二人の距離を一定にする
+	R_Pos.x = L_Pos.x + PLAYER_DISTANCE;
+
+	// 座標を反映
+	m_pLeftPlayer->SetPos(L_Pos.x, L_Pos.y, 0.0f);
+	m_pRightPlayer->SetPos(R_Pos.x, R_Pos.y, 0.0f);
+}
+
+
 void CPlayerManager::Reset()
 {
 	L_isGround = false;
 	R_isGround = false;
+	L_IsSideGround = false;
+	R_IsSideGround = false;
 }
 
 

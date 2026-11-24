@@ -52,6 +52,10 @@ public:
 	// Groundの三角形情報を取得
 	Collision::Triangle* GetGroundTriangle(int num);
 
+	// Groundの当たり判定を取得　横
+	Collision::Info* GetGroundSideCollision(int num);
+	// Groundの三角形情報を取得　横
+	Collision::Triangle* GetGroundSideTriangle(int num);
 
 
 };

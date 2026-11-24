@@ -9,8 +9,10 @@ CPlayer::CPlayer()
     , m_speedY(0.012f)
     , m_isGround(false)
     , m_collision()
+    , m_sidecollision()
 {
     m_collision.type = Collision::eLine;
+    m_sidecollision.type = Collision::eLine;
 }
 
 CPlayer::~CPlayer()
@@ -19,6 +21,7 @@ CPlayer::~CPlayer()
 
 void CPlayer::Update()
 {
+    /*
     // 移動速度
     const float MOVE_SPEED = 0.05f;
     const float JUMP_MOVE_SPEED = 0.02f;
@@ -41,19 +44,36 @@ void CPlayer::Update()
     {
         m_pos[0] += moveSpeed;
     }
+    */
 
+
+    // 当たり判定の更新
     m_collision.line.start = {
         m_pos[0],
         m_pos[1],
         m_pos[2]
     };
 
-    // 当たり判定の更新
     m_collision.line.end = {
         m_pos[0],
         m_pos[1] - 0.55f,
         m_pos[2]
     };
+
+    //横方向
+    m_sidecollision.line.start = {
+        m_pos[0] - 0.25f,
+        m_pos[1],
+        m_pos[2]
+    };
+
+    //移動方向に線分を
+    m_sidecollision.line.end = {
+       m_pos[0] + 0.25f ,
+       m_pos[1],
+       m_pos[2]
+    };
+
 }
 
 void CPlayer::Draw()

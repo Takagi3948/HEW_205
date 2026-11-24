@@ -17,6 +17,8 @@ private:
 	bool rightJump;
 	bool L_isGround;
 	bool R_isGround;
+	bool L_IsSideGround;
+	bool R_IsSideGround;
 	
 public:
 	CPlayerManager();
@@ -31,10 +33,15 @@ public:
 	DirectX::XMFLOAT4 GetPos();
 
 	Collision::Info RightGetCollision();
+	Collision::Info RightGetSideCollision();
 	Collision::Info LeftGetCollision();
+	Collision::Info LeftGetSideCollision();
 
 	void RightOnCollision(Collision::Result collision);
 	void LeftOnCollision(Collision::Result collision);
+
+	void RightOnSideCollision(Collision::Result collision,int side);
+	void LeftOnSideCollision(Collision::Result collision, int side);
 
 	void Reset();
 };

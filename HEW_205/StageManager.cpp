@@ -180,3 +180,26 @@ Collision::Triangle* CStageManager::GetGroundTriangle(int num)
 
 	return v_Ground[num].GetTriangle();
 }
+
+
+
+
+Collision::Info* CStageManager::GetGroundSideCollision(int num)
+{
+	if (num < 0 || num >= v_Ground.size())
+	{
+		return nullptr;
+	}
+
+	return v_Ground[num].GetSideCollision();
+}
+
+Collision::Triangle* CStageManager::GetGroundSideTriangle(int num)
+{
+	if (num < 0 || num >= v_Ground.size())
+	{
+		return nullptr;
+	}
+
+	return v_Ground[num].GetSideTriangle();
+}

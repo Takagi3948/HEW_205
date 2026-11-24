@@ -8,6 +8,7 @@ class CPlayer {
 private:
 	float m_pos[3];		//À•W
 	Collision::Info m_collision; //  “–‚½‚è”»’è‚Ìî•ñ
+	Collision::Info m_sidecollision; //  ‰¡‚Ì“–‚½‚è”»’è‚Ìî•ñ
 	float m_speedY;
 	bool  m_isGround;
 
@@ -17,6 +18,10 @@ public:
 
 	Collision::Info GetCollision() {
 		return m_collision;
+	}
+
+	Collision::Info GetSideCollision() {
+		return m_sidecollision;
 	}
 
 	//XVˆ—

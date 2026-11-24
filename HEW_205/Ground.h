@@ -13,6 +13,9 @@ private:
 	Collision::Info m_collision;		//当たり判定の情報
 	Collision::Triangle m_triangle[2]; //三角形の情報
 
+	Collision::Info m_sideCollision[2];	//横方向の当たり判定
+	Collision::Triangle m_sideTriangle[4];	//横方向の三角形の情報
+
 public:
 	Ground(float posx, float posy, float posz, float sizex, float sizey, float sizez, float angle,int type );
 	~Ground();
@@ -38,6 +41,18 @@ public:
 
 	Collision::Info GetCollision() {
 		return m_collision;
+	}
+
+
+	//横方向の情報
+	Collision::Info* GetSideCollision()
+	{
+		return m_sideCollision;
+	}
+
+	Collision::Triangle* GetSideTriangle()
+	{
+		return m_sideTriangle;
 	}
 
 };
