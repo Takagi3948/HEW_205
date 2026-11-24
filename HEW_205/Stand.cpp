@@ -156,3 +156,13 @@ Collision::Box CStand::GetBox()
 {
 	return Collision::Box{ m_pos,{3.0f,0.5f,0.6f} };
 }
+
+DirectX::XMFLOAT3 CStand::GetPos()
+{
+	return m_pos;
+}
+
+DirectX::XMFLOAT3 CStand::GetSize()
+{
+	return m_size;
+}

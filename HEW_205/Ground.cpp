@@ -2,12 +2,13 @@
 #include "Geometory.h"
 #include <DirectXMath.h>
 
-Ground::Ground()
-	:m_pos{0.0f,0.0f,0.0f}
-	,m_scale{1.0f,1.0f,1.0f}
-    ,m_angle(0.0f)
-    ,m_triangle()
-    ,m_collision()
+Ground::Ground(float posx, float posy, float posz, float sizex, float sizey, float sizez, float angle, int type)
+    :m_pos{ posx,posy,posz }
+    , m_scale{ sizex,sizey,sizez }
+    , m_angle(angle)
+    , type(type)
+    , m_triangle()
+    , m_collision()
 {
     // 当たり判定の種類を線分にする
     m_collision.type = Collision::ePlane;

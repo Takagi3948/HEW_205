@@ -1,7 +1,6 @@
 #ifndef __SCENE_GAME_H__
 #define __SCENE_GAME_H__
 
-#include "Ground.h"
 #include "Goal.h"
 #include "Scene.h"
 #include "Camera.h"
@@ -9,7 +8,7 @@
 #include "PlayerManager.h"
 #include "Stand.h"
 #include "Fruit.h"
-#include "Enemy.h"
+#include "StageManager.h"
 
 
 class SceneGame : public Scene
@@ -20,17 +19,18 @@ public:
 	void Update() final;
 	void Draw() final;
 	void ModelDraw(Model* model,float posX, float posY, float posZ, float sizeX, float sizeY, float sizeZ);
+	void R_IsHitGround();
+	void L_IsHitGround();
 
 
 private:
-	Ground* m_pGround; //地面オブジェクト
 	Goal* m_pGoal; //ゴールオブジェクト
 	Camera* m_pCamera; //継承元のカメラクラスのみ
 	Model* m_pModel;
 	CPlayerManager* m_pPlayerManager;
 	CStand* m_pStand;
 	CFruit* m_pFruit;
-	CEnemy* m_pEnemy[MAX_ENEMY];
+	CStageManager* m_pStageManager;
 
 	
 

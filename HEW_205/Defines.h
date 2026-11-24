@@ -30,5 +30,8 @@ static const int SCREEN_HEIGHT	= 720;
 static const int	DEBUG_GRID_NUM		= 10;			// グリッド中心から端までの線の本数
 static const float	DEBUG_GRID_MARGIN	= METER(1.0f);	// グリッド配置幅
 
+//ステージ量
+#define WORLD_NUM (3)
+#define STAGE_NUM (3)
 
 #endif // __DEFINES_H__
