@@ -51,4 +51,21 @@ public:
 
 	//座標の取得(Size,Pos)
 	Collision::Box GetBox();
+
+
+	// 現在の台の中心座標
+	DirectX::XMFLOAT3 GetPos() const;
+
+	// 現在の台の角度
+	float GetAngle() const;
+	
+	// 1フレーム前の台の中心座標
+	DirectX::XMFLOAT3 GetPrevPos() const;
+	
+	// 1フレーム前の台の角度
+	float GetPrevAngle() const;
+	
+	// 台の大きさ
+	DirectX::XMFLOAT3 GetSize() const;
+	
 };

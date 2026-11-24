@@ -6,16 +6,20 @@
 
 namespace
 {
-	const float Fruit_GRAVITY      = 0.002f; // 毎フレーム速度に足す量
-	const float BOUNCE_SPEED = 0.15f;  // 跳ね返り直後の速さ（1フレームあたり）
-	const float HIT_OFFSET_Y = 0.0f;   // m_pos から判定球の中心までの高さ（既存の +0.5f）
-	const float HIT_RADIUS   = 0.05f;  // 判定球の半径（既存の radius/10）
-	const float PUSH_OUT     = 0.001f; // 跳ね返し後に台から浮かせる量
-	const float OUT_Y        = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
+	const float Fruit_GRAVITY = 0.002f; // 毎フレーム速度に足す量
+	const float BOUNCE_SPEED  = 0.1f;  // 跳ね返り直後の速さ（1フレームあたり）
+	const float HIT_OFFSET_Y  = 0.0f;   // m_pos から判定球の中心までの高さ（既存の +0.5f）
+	const float HIT_RADIUS    = 0.05f;  // 判定球の半径（既存の radius/10）
+	const float PUSH_OUT      = 0.001f; // 跳ね返し後に台から浮かせる量
+	const float OUT_Y         = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
+	const float TANGENT_KEEP  = 0.5f;  // 面に沿った方向の勢いを残す割合（0=前と同じ、1=鏡面反射）
+	const float SURFACE_GAIN  = 0.1f;  // 面（台）の動きを乗せる割合（0=無視）
+	const float IMPACT_GAIN   = 0.05f;  // 落下の勢いを跳ね返りに足す割合（0=固定速度）
 }
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
+	,m_prevPos(0.0f,0.0f,0.0f)
 	,m_vel(0.0f,0.0f,0.0f)
 	, radius(0.5f)
 	, m_pModel(nullptr)
@@ -36,7 +40,7 @@ CFruit::~CFruit()
 {
 	m_pCamera = nullptr;
 	m_pGround = nullptr;
-
+	m_pStand = nullptr;
 	if (m_pModel)
 	{
 		delete m_pModel;
@@ -61,16 +65,44 @@ void CFruit::Update()
 	//台との判定
 	if (m_pStand)
 	{
-		DirectX::XMFLOAT3 hitPos, n;
-		if (m_pStand->SweptHit(prev, cur, HIT_RADIUS, hitPos, n))
+		const DirectX::XMFLOAT3 pp = m_pStand->GetPrevPos();
+		const DirectX::XMFLOAT3 cp = m_pStand->GetPos();
+		const DirectX::XMMATRIX prevW = DirectX::XMMatrixRotationZ(m_pStand->GetPrevAngle()) * DirectX::XMMatrixTranslation(pp.x, pp.y, pp.z);
+		const DirectX::XMMATRIX curW  = DirectX::XMMatrixRotationZ(m_pStand->GetAngle()) * DirectX::XMMatrixTranslation(cp.x, cp.y, cp.z);
+		//前の位置は前フレームの台から、今の位置は今フレームの台から見た座標にする
+		DirectX::XMFLOAT3 localPrev, localCur;
+		DirectX::XMStoreFloat3(&localPrev, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&prev), DirectX::XMMatrixInverse(nullptr, prevW)));
+		DirectX::XMStoreFloat3(&localCur, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&cur), DirectX::XMMatrixInverse(nullptr, curW)));
+
+		const DirectX::XMFLOAT3 size = m_pStand->GetSize();
+		const float h = size.y * 0.5f + HIT_RADIUS;
+		Collision::Plane plane = { { 0.0f, h, 0.0f }, { 0.0f, 1.0f, 0.0f } };
+		Collision::Line  line = { localPrev, localCur };
+
+		//表側から裏側へ横切ったか、横切った位置が台の長さの範囲内か
+		Collision::Result r = Collision::Hit(plane, line);
+		if (r.isHit && fabsf(r.point.x) <= size.x * 0.5f)
 		{
-			//平面の上に置きなおして、入射角に関係なく台のY軸方向へ固定速度で飛ばす
-			m_pos.x = hitPos.x + n.x * PUSH_OUT;
-			m_pos.y = hitPos.y + n.y * PUSH_OUT - HIT_OFFSET_Y;
-			m_vel.x = n.x * BOUNCE_SPEED;
-			m_vel.y = n.y * BOUNCE_SPEED;
+			//ローカルの交差点を今フレームと前フレームのワールドに戻す
+			const DirectX::XMVECTOR vHit = DirectX::XMLoadFloat3(&r.point);
+			DirectX::XMFLOAT3 hitNow, hitBefore, n;
+			DirectX::XMStoreFloat3(&hitNow, DirectX::XMVector3TransformCoord(vHit, curW));
+			DirectX::XMStoreFloat3(&hitBefore, DirectX::XMVector3TransformCoord(vHit, prevW));
+			DirectX::XMStoreFloat3(&n, DirectX::XMVector3TransformNormal(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), curW)); //台のY軸
+
+			//台のこの点の１フレームの移動量
+			const DirectX::XMFLOAT3 surfaceVel = { hitNow.x - hitBefore.x, hitNow.y - hitBefore.y, 0.0f };
+
+			//速度を先に計算してから、面の上に置き直す
+			m_vel = CalcBounceVelocity(n, surfaceVel);
+			m_pos.x = hitNow.x + n.x * PUSH_OUT;
+			m_pos.y = hitNow.y + n.y * PUSH_OUT - HIT_OFFSET_Y;
+
+
 		}
+	
 	}
+	
 	
 	
 	//重力
@@ -153,6 +185,30 @@ void CFruit::SetPos(float x, float y, float z)
 	m_pos.x = x;
 	m_pos.y = y;
 	m_pos.z = z;
+}
+
+DirectX::XMFLOAT3 CFruit::CalcBounceVelocity(const DirectX::XMFLOAT3& normal, const DirectX::XMFLOAT3& surfaceVel) const
+{
+	const DirectX::XMVECTOR n    = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&normal));
+	const DirectX::XMVECTOR vSur = DirectX::XMLoadFloat3(&surfaceVel);
+	const DirectX::XMVECTOR vNow = DirectX::XMLoadFloat3(&m_vel);
+
+	//落下の勢い（IMPACT_GAIN 用）：面に近づく速さ。面の動きも含めた相対速度で測る
+	const float closing = - DirectX::XMVectorGetX(DirectX::XMVector3Dot(DirectX::XMVectorSubtract(vNow, vSur), n));
+
+	//面に沿った成分：りんごの速度だけから取る（台の動きは混ぜない）
+	const float vn = DirectX::XMVectorGetX(DirectX::XMVector3Dot(vNow, n));
+	const DirectX::XMVECTOR vt = DirectX::XMVectorSubtract(vNow, DirectX::XMVectorScale(n, vn));
+
+	//垂直：固定速度＋落下の勢い／面に沿う：勢いを残す／台の動き：SURFACE_GAIN の割合だけ乗せる
+	const float up = BOUNCE_SPEED + IMPACT_GAIN * fmaxf(closing, 0.0f);
+	DirectX::XMVECTOR v = DirectX::XMVectorScale(n, up);
+	v = DirectX::XMVectorAdd(v, DirectX::XMVectorScale(vt, TANGENT_KEEP));
+	v = DirectX::XMVectorAdd(v, DirectX::XMVectorScale(vSur, SURFACE_GAIN));
+
+	DirectX::XMFLOAT3 out;
+	DirectX::XMStoreFloat3(&out, v);
+	return out;
 }
 
 

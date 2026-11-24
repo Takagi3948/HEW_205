@@ -11,14 +11,18 @@
 
 class CFruit {
 private:
+	
+
 	DirectX::XMFLOAT3 m_pos;		//座標
+	DirectX::XMFLOAT3 m_prevPos;// 移動前の座標
 	DirectX::XMFLOAT3 m_vel;
 	float radius;	//半径
 	Model* m_pModel;
 	Camera* m_pCamera;
 	Ground* m_pGround;
 	CStand* m_pStand;
-
+private:
+	
 public:
 
 
@@ -34,6 +38,8 @@ public:
 
 	//座標の設定
 	void SetPos(float x, float y, float z);
+
+	DirectX::XMFLOAT3 CalcBounceVelocity(const DirectX::XMFLOAT3& normal, const DirectX::XMFLOAT3& surfaceVel)const;
 
 	void SetCamera(Camera* pCamera)
 	{
