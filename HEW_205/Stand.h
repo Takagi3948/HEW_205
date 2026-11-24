@@ -51,4 +51,10 @@ public:
 
 	//座標の取得(Size,Pos)
 	Collision::Box GetBox();
+
+	//座標の取得
+	DirectX::XMFLOAT3 GetPos();
+
+	//サイズの取得
+	DirectX::XMFLOAT3 GetSize();
 };
