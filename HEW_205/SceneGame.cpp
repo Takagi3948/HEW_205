@@ -19,7 +19,7 @@ SceneGame::SceneGame()
 	m_pGround->SetScale(20.0f, 0.5f, 3.0f);
 
 	m_pGoal = new Goal;
-	m_pGoal->SetPos(0.0f, 1.5f, 0.0f);
+	m_pGoal->SetPos(10.0f, 1.5f, 0.0f);
 
 	//m_pCamera = new CameraDebug(); //Œp³‚³‚ê‚½Debug‚ÌƒNƒ‰ƒX‚ğ“ü‚ê‚é
 
