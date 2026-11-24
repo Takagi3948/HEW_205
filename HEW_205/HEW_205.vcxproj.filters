@@ -46,6 +46,12 @@
     <Filter Include="ヘッダー ファイル\Game\Player">
       <UniqueIdentifier>{6972a149-7573-40b2-9628-85b4150e656a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Stage">
+      <UniqueIdentifier>{68a14bc9-98bf-494e-8a6c-893d05e7bf11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Stage">
+      <UniqueIdentifier>{ae1cbd52-1e15-4015-a35c-f37431393560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sprite.cpp">
@@ -108,9 +114,6 @@
     <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Fruit.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
@@ -123,8 +126,14 @@
     <ClCompile Include="Startup.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
+    <ClCompile Include="StageManager.cpp">
+      <Filter>ソース ファイル\Game\Stage</Filter>
+    </ClCompile>
     <ClCompile Include="Ground.cpp">
-      <Filter>ソース ファイル\Game</Filter>
+      <Filter>ソース ファイル\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\Game\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +176,6 @@
     <ClInclude Include="Texture.h">
       <Filter>ヘッダー ファイル\System\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>ヘッダー ファイル\System</Filter>
-    </ClInclude>
     <ClInclude Include="Goal.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
@@ -191,14 +197,20 @@
     <ClInclude Include="PlayerManager.h">
       <Filter>ヘッダー ファイル\Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Fruit.h">
       <Filter>ヘッダー ファイル\Game</Filter>
     </ClInclude>
     <ClInclude Include="MainCamera.h">
       <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ヘッダー ファイル\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StageManager.h">
+      <Filter>ヘッダー ファイル\Game\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
