@@ -8,7 +8,7 @@
 //プレイヤー⇔坂道	Line(Ray) + Plane + Triangle
 // ↑プレイヤー側に実装
 // 
-//果物⇔台			Plane + Triangle
+//果物⇔台			Ray + Plane + Triangle
 //果物⇔障害物		Sphere + Box
 // ↑果物側に実装
 
@@ -90,6 +90,7 @@ public:
 	static Result Hit(Sphere a, Box b);
 	//平面とレイの当たり判定
 	static Result Hit(Plane plane, Ray ray, float lenght);
+
 	//平面と線分の当たり判定
 	static Result Hit(Plane plane, Line line);
 	//点と三角形の当たり判定

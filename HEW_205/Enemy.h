@@ -1,16 +1,18 @@
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
+#include "Collision.h"
 
-#define MAX_ENEMY (3)
 
 class CEnemy {
 private:
 	float m_pos[3];		//座標
 	float m_scale[3];	//拡大率
+	int type;			//タイプ名
+	Collision::Info m_collision;		//当たり判定の情報
 
 public:
-	CEnemy();
+	CEnemy(float posx, float posy, float posz, float sizex, float sizey, float sizez,int type);
 	~CEnemy();
 
 	//更新処理
@@ -25,4 +27,9 @@ public:
 
 	//拡大率の設定
 	void SetScale(float x, float y, float z);
+
+
+	Collision::Info GetCollision() {
+		return m_collision;
+	}
 };

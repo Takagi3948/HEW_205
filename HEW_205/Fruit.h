@@ -1,4 +1,4 @@
-
+ï»¿#pragma once
 #include <DirectXMath.h>
 #include "Shader.h"
 #include "MeshBuffer.h"
@@ -6,37 +6,65 @@
 #include "Model.h"
 #include "Camera.h"
 #include "CameraDebug.h"
-
+#include "Ground.h"
+#include "Stand.h"
+#include "Collision.h"
 
 class CFruit {
 private:
-	DirectX::XMFLOAT3 m_pos;		//À•W
-	float radius;	//”¼Œa
+	DirectX::XMFLOAT3 m_pos;		//åº§æ¨™
+	DirectX::XMFLOAT3 m_vel;
+	float radius;	//åŠå¾„
 	Model* m_pModel;
 	Camera* m_pCamera;
+	Ground* m_pGround;
+	CStand* m_pStand;
+	Collision::Info m_GroundCollision;	//å¯¾åœ°é¢
+	Collision::Info m_EnemyCollision;	//å¯¾ã‚¨ãƒãƒŸãƒ¼
 
 public:
-
 
 	CFruit();
 	~CFruit();
 
-	//XVˆ—
+	//æ›´æ–°å‡¦ç†
 	void Update();
 
-	//•`‰æˆ—
-	//ƒJƒƒ‰‚Ìæ“¾
-	void Draw(Camera*);
+	//æç”»å‡¦ç†
+	void Draw();
+
+	//Enemy
+	void OnEnemyCollision(Collision::Result collision, Collision::Info enemybox);
+
+	//Ground
+	void OnGroundCollision(Collision::Result collision);
+
+	Collision::Info GetEnemyCollision() { return m_EnemyCollision; }
+	Collision::Info GetGroundCollision() { return m_GroundCollision; }
 
 
-	//À•W‚Ìİ’è
+	//åº§æ¨™ã®è¨­å®š
 	void SetPos(float x, float y, float z);
 
-	// À•W‚Ìæ“¾
+	// ï¿½ï¿½ï¿½Wï¿½Ìæ“¾
 	DirectX::XMFLOAT3 GetPos();
 
-	// ”¼Œa‚Ìæ“¾
+	// ï¿½ï¿½ï¿½aï¿½Ìæ“¾
 	float GetRadius();
 
+	void SetCamera(Camera* pCamera)
+	{
+		m_pCamera = pCamera;
+	}
+
+	void SetStand(CStand* pStand)
+	{
+		m_pStand = pStand;
+	}
+
+	void SetGround(Ground* pGround)
+	{
+		m_pGround = pGround;
+	}
 
 };

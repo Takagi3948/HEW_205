@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 Camera::Camera()
-	:m_pos(0.0f,2.0f,-7.0f) //構造体なので{}だが、XMFLOAT3は()でも行ける設定なのでセーフ
-	,m_look(0.0f,2.0f,0.0f)
+	:m_pos(0.0f,2.0f,-10.0f) //構造体なので{}だが、XMFLOAT3は()でも行ける設定なのでセーフ
+	,m_look(0.0f,3.0f,0.0f)
 	,m_up(0.0f,1.0f,0.0f)
 	,m_fovy(DirectX::XMConvertToRadians(60.0f))
 	,m_aspect(16.0f/9.0f) //画面比率

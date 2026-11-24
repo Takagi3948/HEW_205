@@ -164,6 +164,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderList.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Stand.cpp" />
     <ClCompile Include="Startup.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -182,19 +183,18 @@
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="LeftPlayer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="MainCamera.h" />
     <ClInclude Include="MeshBuffer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
-    <ClInclude Include="RightPlayer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderList.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StageManager.h" />
     <ClInclude Include="Stand.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
