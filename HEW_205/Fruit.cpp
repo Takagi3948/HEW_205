@@ -13,8 +13,9 @@ namespace
 	const float PUSH_OUT     = 0.001f; // 跳ね返し後に台から浮かせる量
 	const float OUT_Y        = -9.0f;  // 画面外に飛ばす仮の高さ（既存）
 	const float RESTITUTION = 1.0f; // 反発係数（1.0 = エネルギー損失なし）
+	const float BASE_BOUNCE_SPEED = 0.1f;  //基準となる強さ
 	const float CENTER_BOUNCE = 1.5f; // 中央の強さ
-	const float EDGE_BOUNCE = 0.3f; // 端の強さ
+	const float EDGE_BOUNCE = 0.5f; // 端の強さ
 
 }
 
@@ -83,21 +84,51 @@ void CFruit::Update()
 
 			if (m_pStand->SweptHit(prev, cur, HIT_RADIUS, hitPos, n))
 			{
-				// 衝突直前の速度を取得
+				// 衝突直前の速度
 				DirectX::XMFLOAT3 inVel = m_vel;
 
-				// 入射角を考慮した反射速度を計算
+				// 入射角を考慮した反射
 				float dot = inVel.x * n.x + inVel.y * n.y;
 
-				// 反射公式
 				m_vel.x = inVel.x - 2.0f * dot * n.x;
 				m_vel.y = inVel.y - 2.0f * dot * n.y;
 
-				// 反発係数を適用
-				m_vel.x *= RESTITUTION;
-				m_vel.y *= RESTITUTION;
+				float reflectX = inVel.x - 2.0f * dot * n.x;
+				float reflectY = inVel.y - 2.0f * dot * n.y;
 
-				// 衝突位置に戻して、台へのめり込みを防ぐ
+				// 反射方向の長さ
+				float length = sqrtf(reflectX * reflectX + reflectY * reflectY);
+
+
+				// ---------------------------------
+				// 当たった位置による反発力の調整
+				// ---------------------------------
+
+				// Standの中心位置と半分の幅を取得
+				float centerX = m_pStand->GetPos().x;
+				float halfWidth = m_pStand->GetSize().x * 0.5f;
+
+				// 中央からの距離を0～1に正規化
+				float t = fabsf(hitPos.x - centerX) / halfWidth;
+
+				// 範囲外にならないように制限
+				if (t > 1.0f)
+				{
+					t = 1.0f;
+				}
+
+				// 中央1.5倍、端0.3倍
+				float bouncePower = CENTER_BOUNCE
+					+ (EDGE_BOUNCE - CENTER_BOUNCE) * t;
+
+				// ずっと加算されないように
+				if (length > 0.0001f)
+				{
+					m_vel.x = (reflectX / length) * BASE_BOUNCE_SPEED * bouncePower;
+					m_vel.y = (reflectY / length) * BASE_BOUNCE_SPEED * bouncePower;
+				}
+
+				// 台へのめり込み防止
 				m_pos.x = hitPos.x + n.x * PUSH_OUT;
 				m_pos.y = hitPos.y + n.y * PUSH_OUT - HIT_OFFSET_Y;
 			}
