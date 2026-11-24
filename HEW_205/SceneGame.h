@@ -23,6 +23,8 @@ public:
 	void L_IsHitGround();
 	void R_IsHitSideGround();
 	void L_IsHitSideGround();
+	void FruitIsHitGround();
+	void FruitIsHitEnemy();
 
 
 private:

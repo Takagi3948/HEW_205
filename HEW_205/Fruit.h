@@ -8,6 +8,7 @@
 #include "CameraDebug.h"
 #include "Ground.h"
 #include "Stand.h"
+#include "Collision.h"
 
 class CFruit {
 private:
@@ -18,9 +19,10 @@ private:
 	Camera* m_pCamera;
 	Ground* m_pGround;
 	CStand* m_pStand;
+	Collision::Info m_GroundCollision;	//対地面
+	Collision::Info m_EnemyCollision;	//対エネミー
 
 public:
-
 
 	CFruit();
 	~CFruit();
@@ -30,6 +32,15 @@ public:
 
 	//描画処理
 	void Draw();
+
+	//Enemy
+	void OnEnemyCollision(Collision::Result collision);
+
+	//Ground
+	void OnGroundCollision(Collision::Result collision);
+
+	Collision::Info GetEnemyCollision() { return m_EnemyCollision; }
+	Collision::Info GetGroundCollision() { return m_GroundCollision; }
 
 
 	//座標の設定

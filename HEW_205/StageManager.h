@@ -58,5 +58,11 @@ public:
 	Collision::Triangle* GetGroundSideTriangle(int num);
 
 
+	//Enemy‚Ì”‚ğæ“¾
+	int GetEnemyCount();
+	//Enemy‚Ì“–‚½‚è”»’è‚Ìæ“¾
+	Collision::Info GetEnemyCollision(int num);
+
+
 };
 

@@ -21,12 +21,14 @@ namespace
 
 CFruit::CFruit()
 	:m_pos(0.0f, 3.0f, 0.0f)
-	,m_vel(0.0f,0.0f,0.0f)
+	, m_vel(0.0f, 0.0f, 0.0f)
 	, radius(0.5f)
 	, m_pModel(nullptr)
 	, m_pCamera(nullptr)
 	, m_pStand(nullptr)
 	, m_pGround(nullptr)
+	, m_EnemyCollision()
+	, m_GroundCollision()
 {
 	m_pModel = new Model();
 
@@ -34,6 +36,9 @@ CFruit::CFruit()
 	{
 		MessageBox(NULL, "モデル読み込み失敗", "Load Error", MB_OK);
 	}
+
+	m_EnemyCollision.type = Collision::eSphere;
+	m_GroundCollision.type = Collision::eLine;
 
 }
 
@@ -135,7 +140,23 @@ void CFruit::Update()
 		}
 	}
 	
-	
+	//当たり判定の計算
+	m_EnemyCollision.sphere.center = m_pos;
+	m_EnemyCollision.sphere.radius = radius;
+
+	m_GroundCollision.line.start = {
+		m_pos.x,
+		m_pos.y,
+		m_pos.z
+	};
+
+	m_GroundCollision.line.end = {
+		m_pos.x,
+		m_pos.y - 1.5f,
+		m_pos.z
+	};
+
+
 	//重力
 	//const float GRAVITY = 0.05f;
 	//m_pos.y -= GRAVITY;
@@ -211,6 +232,17 @@ void CFruit::Draw()
 
 
 
+}
+
+void CFruit::OnEnemyCollision(Collision::Result collision)
+{
+	//シンプルな反射
+
+}
+
+void CFruit::OnGroundCollision(Collision::Result collision)
+{
+	m_pos.y = -9.0f;
 }
 
 void CFruit::SetPos(float x, float y, float z)

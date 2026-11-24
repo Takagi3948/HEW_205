@@ -182,8 +182,6 @@ Collision::Triangle* CStageManager::GetGroundTriangle(int num)
 }
 
 
-
-
 Collision::Info* CStageManager::GetGroundSideCollision(int num)
 {
 	if (num < 0 || num >= v_Ground.size())
@@ -202,4 +200,20 @@ Collision::Triangle* CStageManager::GetGroundSideTriangle(int num)
 	}
 
 	return v_Ground[num].GetSideTriangle();
+}
+
+
+int CStageManager::GetEnemyCount()
+{
+	return (int)v_Enemy.size();
+}
+
+Collision::Info CStageManager::GetEnemyCollision(int num)
+{
+	if (num < 0 || num >= v_Ground.size())
+	{
+		return Collision::Info();
+	}
+
+	return v_Enemy[num].GetCollision();
 }

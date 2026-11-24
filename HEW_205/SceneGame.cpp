@@ -354,4 +354,16 @@ void SceneGame::L_IsHitSideGround()
 	}
 }
 
+void SceneGame::FruitIsHitGround()
+{
+
+}
+
+void SceneGame::FruitIsHitEnemy()
+{
+
+}
+
+
+
 
